@@ -87,11 +87,11 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.setNetworkButton.clicked.connect(self.buildNetwork)
         self.shortestRouteButton.clicked.connect(self.calculateRoute)
         self.clearRouteButton.clicked.connect(self.deleteRoutes)
-        self.serviceAreaButton.clicked.connect(self.calculateServiceArea)
-        self.bufferButton.clicked.connect(self.calculateBuffer)
-        self.selectBufferButton.clicked.connect(self.selectFeaturesBuffer)
-        self.makeIntersectionButton.clicked.connect(self.calculateIntersection)
-        self.selectRangeButton.clicked.connect(self.selectFeaturesRange)
+        #self.serviceAreaButton.clicked.connect(self.calculateServiceArea)
+        #self.bufferButton.clicked.connect(self.calculateBuffer)
+        #self.selectBufferButton.clicked.connect(self.selectFeaturesBuffer)
+        #self.makeIntersectionButton.clicked.connect(self.calculateIntersection)
+        #self.selectRangeButton.clicked.connect(self.selectFeaturesRange)
         self.expressionSelectButton.clicked.connect(self.selectFeaturesExpression)
         self.expressionFilterButton.clicked.connect(self.filterFeaturesExpression)
 
@@ -115,12 +115,12 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.counterProgressBar.setValue(0)
 
         # add button icons
-        self.medicButton.setIcon(QtGui.QIcon(':icons/medic_box.png'))
-        self.ambulanceButton.setIcon(QtGui.QIcon(':icons/ambulance.png'))
-        self.logoLabel.setPixmap(QtGui.QPixmap(':icons/ambulance.png'))
+        #self.medicButton.setIcon(QtGui.QIcon(':icons/medic_box.png'))
+        #self.ambulanceButton.setIcon(QtGui.QIcon(':icons/ambulance.png'))
+        #self.logoLabel.setPixmap(QtGui.QPixmap(':icons/ambulance.png'))
 
         movie = QtGui.QMovie(':icons/loading2.gif')
-        self.logoLabel.setMovie(movie)
+        #self.logoLabel.setMovie(movie)
         movie.start()
 
         # add matplotlib Figure to chartFrame
@@ -156,7 +156,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 #######
     def openScenario(self,filename=""):
         scenario_open = False
-        scenario_file = os.path.join(self.plugin_dir,'projectdata','Rotterdam.qgs')
+        scenario_file = os.path.join(self.plugin_dir,'Real_data','Rotterdam.qgs')
         # check if file exists
         if os.path.isfile(scenario_file):
             self.iface.addProject(scenario_file)
