@@ -51,17 +51,17 @@
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
        <layout class="QFormLayout" name="formLayout">
-        <item row="0" column="0">
-         <widget class="QPushButton" name="openScenarioButton">
-          <property name="text">
-           <string>Open Scenario</string>
-          </property>
-         </widget>
-        </item>
         <item row="0" column="1">
          <widget class="QPushButton" name="saveScenarioButton">
           <property name="text">
            <string>Save Scenario</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QPushButton" name="openScenarioButton">
+          <property name="text">
+           <string>Open Scenario</string>
           </property>
          </widget>
         </item>
@@ -88,26 +88,6 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="1">
-         <widget class="QComboBox" name="selectAttributeCombo"/>
-        </item>
-        <item row="0" column="1">
-         <widget class="QComboBox" name="selectLayerCombo"/>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="selectAttributeLabel">
-          <property name="text">
-           <string>Select attribute:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="0">
-         <widget class="QLabel" name="selectLayerLabel">
-          <property name="text">
-           <string>Select layer:</string>
-          </property>
-         </widget>
-        </item>
         <item row="2" column="1">
          <widget class="QPushButton" name="ambulanceButton">
           <property name="sizePolicy">
@@ -126,6 +106,26 @@
            </size>
           </property>
          </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="selectLayerLabel">
+          <property name="text">
+           <string>Select layer:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QComboBox" name="selectAttributeCombo"/>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="selectAttributeLabel">
+          <property name="text">
+           <string>Select attribute:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QComboBox" name="selectLayerCombo"/>
         </item>
        </layout>
       </item>
@@ -151,6 +151,13 @@
       </item>
       <item>
        <layout class="QGridLayout" name="gridLayout">
+        <item row="0" column="0" colspan="2">
+         <widget class="QProgressBar" name="counterProgressBar">
+          <property name="value">
+           <number>24</number>
+          </property>
+         </widget>
+        </item>
         <item row="1" column="0">
          <widget class="QPushButton" name="startCounterButton">
           <property name="text">
@@ -162,13 +169,6 @@
          <widget class="QPushButton" name="cancelCounterButton">
           <property name="text">
            <string>Cancel</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="0" colspan="2">
-         <widget class="QProgressBar" name="counterProgressBar">
-          <property name="value">
-           <number>24</number>
           </property>
          </widget>
         </item>
@@ -216,20 +216,13 @@
        </widget>
       </item>
       <item row="3" column="0">
-       <widget class="QPushButton" name="makeIntersectionButton">
-        <property name="text">
-         <string>Intersection</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0">
        <widget class="QPushButton" name="expressionSelectButton">
         <property name="text">
          <string>Select</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="1">
+      <item row="3" column="1">
        <widget class="QPushButton" name="expressionFilterButton">
         <property name="text">
          <string>Filter</string>

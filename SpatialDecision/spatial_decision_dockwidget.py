@@ -83,7 +83,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         # analysis
         self.graph = QgsGraph()
-        self.tied_points = []
+        self.tied_points = self.getSelectedAttribute()
         self.setNetworkButton.clicked.connect(self.buildNetwork)
         self.shortestRouteButton.clicked.connect(self.calculateRoute)
         self.clearRouteButton.clicked.connect(self.deleteRoutes)
@@ -190,10 +190,12 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         layer = uf.getLegendLayerByName(self.iface,layer_name)
         self.updateAttributes(layer)
 
+
     def getSelectedLayer(self):
         layer_name = self.selectLayerCombo.currentText()
         layer = uf.getLegendLayerByName(self.iface,layer_name)
         return layer
+
 
     def updateAttributes(self, layer):
         self.selectAttributeCombo.clear()
@@ -269,7 +271,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 #######
     # route functions
     def getNetwork(self):
-        roads_layer = self.getSelectedLayer()
+        roads_layer = uf.getLegendLayerByName(self.iface, "Wegen")
         if roads_layer:
             # see if there is an obstacles layer to subtract roads from the network
             obstacles_layer = uf.getLegendLayerByName(self.iface, "Obstacles")
@@ -299,6 +301,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 if self.graph and self.tied_points:
                     text = "network is built for %s points" % len(self.tied_points)
                     self.insertReport(text)
+        print "test"
         return
 
     def calculateRoute(self):

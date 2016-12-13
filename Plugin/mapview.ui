@@ -6,19 +6,84 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1008</width>
-    <height>641</height>
+    <width>415</width>
+    <height>451</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
-    <widget class="QTabWidget" name="tabWidget">
+   <item row="1" column="0">
+    <widget class="QTabWidget" name="Page_1">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
+     <widget class="QWidget" name="tab_2">
+      <attribute name="title">
+       <string>Page</string>
+      </attribute>
+      <widget class="QWidget" name="gridLayoutWidget">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>10</y>
+         <width>274</width>
+         <height>187</height>
+        </rect>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="2" column="1">
+         <widget class="QPushButton" name="saveScenarioButton">
+          <property name="text">
+           <string>Save Scenario</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="1">
+         <widget class="QPushButton" name="cancelCounterButton">
+          <property name="text">
+           <string>Cancel</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QComboBox" name="selectAttributeCombo"/>
+        </item>
+        <item row="1" column="1">
+         <widget class="QComboBox" name="selectLayerCombo"/>
+        </item>
+        <item row="2" column="0">
+         <widget class="QPushButton" name="openScenarioButton">
+          <property name="text">
+           <string>Open Scenario</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="selectLayerLabel">
+          <property name="text">
+           <string>Select layer:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="selectAttributeLabel">
+          <property name="text">
+           <string>Select attribute:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="0">
+         <widget class="QPushButton" name="startCounterButton">
+          <property name="text">
+           <string>Start Counter</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
      <widget class="QWidget" name="tab_3">
       <attribute name="title">
        <string>Page</string>
@@ -35,13 +100,6 @@
          </item>
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout">
-           <item>
-            <widget class="QGraphicsView" name="graphicsView_2">
-             <property name="enabled">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
            <item>
             <widget class="QListWidget" name="listWidget">
              <property name="maximumSize">
@@ -101,9 +159,6 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_4">
            <item>
-            <widget class="QListWidget" name="listWidget_2"/>
-           </item>
-           <item>
             <widget class="QListWidget" name="listWidget_3">
              <item>
               <property name="text">
@@ -160,11 +215,6 @@
         </layout>
        </item>
       </layout>
-     </widget>
-     <widget class="QWidget" name="tab_2">
-      <attribute name="title">
-       <string>Tab 2</string>
-      </attribute>
      </widget>
     </widget>
    </item>
