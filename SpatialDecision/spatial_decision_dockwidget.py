@@ -136,6 +136,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         # initialisation
         self.updateLayers()
+        self.openScenario()
 
         #run simple tests
 
@@ -157,7 +158,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 #######
     def openScenario(self,filename=""):
         scenario_open = False
-        scenario_file = os.path.join(self.plugin_dir,'Real_data\SpatialDecision\qgisfile','rotterdam.qgs')
+        scenario_file = os.path.join(self.plugin_dir,'SpatialDecision\qgisfile','rotterdam.qgs')
         # check if file exists
         if os.path.isfile(scenario_file):
             self.iface.addProject(scenario_file)
