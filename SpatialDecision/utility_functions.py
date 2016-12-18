@@ -338,6 +338,7 @@ def getFeaturesByExpression(layer, expression):
 
 
 def selectFeaturesByExpression(layer, expression):
+    # type: (object, object) -> object
     features = []
     if layer:
         request = QgsFeatureRequest().setFilterExpression(expression)

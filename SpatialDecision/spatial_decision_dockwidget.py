@@ -92,7 +92,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         #self.selectBufferButton.clicked.connect(self.selectFeaturesBuffer)
         #self.makeIntersectionButton.clicked.connect(self.calculateIntersection)
         #self.selectRangeButton.clicked.connect(self.selectFeaturesRange)
-        self.expressionSelectButton.clicked.connect(self.selectFeaturesExpression)
+        #self.expressionSelectButton.clicked.connect(self.selectAllFeaturesExpression)
+        self.expressionSelectButton.clicked.connect(self.getAllIncidents)
         self.expressionFilterButton.clicked.connect(self.filterFeaturesExpression)
 
         # visualisation
@@ -301,8 +302,29 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 if self.graph and self.tied_points:
                     text = "network is built for %s points" % len(self.tied_points)
                     self.insertReport(text)
-        print "test"
         return
+
+    def getAllIncidents(self):
+        incidents_layer = uf.getLegendLayerByName(self.iface, "Incidents")
+        if incidents_layer:
+            ids = uf.getAllFeatureIds(incidents_layer)
+        #uf.selectFeaturesByExpression(incidents_layer, self.expressionEdit.text(),ids) #self.expression klopt niet, moet nog ff kijken wat daar wel kan
+        uf.selectFeaturesByExpression(incidents_layer, "sid")
+
+    def calculateAllRoutes(self):
+        incidents = self.getAllIncidents()
+        layer = uf.getLegendLayerByName(self.iface, "brandweerautos")
+        self.updateAttribute.emit("sid")
+        car = self.tied_points
+
+        for incident in incidents:
+            attributes = ['id']
+            duo = [incident,car]
+            #voeg selected brandweerauto en id aan lijst toe
+            types = [QtCore.QVariant.String]
+            templayer = uf.createTempLayer('temp','POINT',self.network_layer.crs().postgisSrid(),attributes,types)
+            uf.insertTempFeatures(templayer, duo)
+            self.calculateRoute()
 
     def calculateRoute(self):
         # origin and destination must be in the set of tied_points
