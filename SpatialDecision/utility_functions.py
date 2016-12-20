@@ -727,6 +727,7 @@ def insertTempFeatures(layer, geometry, attributes):
     provider = layer.dataProvider()
     geometry_type = provider.geometryType()
     for i, geom in enumerate(geometry):
+        print i
         fet = QgsFeature()
         if geometry_type in (1, 4):
             fet.setGeometry(QgsGeometry.fromPoint(geom))

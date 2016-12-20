@@ -186,7 +186,6 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.selectAttributeCombo.clear()
             self.clearChart()
 
-
     def setSelectedLayer(self):
         layer_name = self.selectLayerCombo.currentText()
         layer = uf.getLegendLayerByName(self.iface,layer_name)
@@ -313,33 +312,40 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     def calculateAllRoutes(self):
         incidents = self.getAllIncidents()
-        print incidents.values
         incidentlayer = uf.getLegendLayerByName(self.iface,"Incidents")
         incidentlayer.setSelectedFeatures([sid for sid in uf.getAllFeatures(incidentlayer)])
         incidents = incidentlayer.selectedFeatures()
         carlayer = uf.getLegendLayerByName(self.iface, "brandweerautos")
         car = carlayer.selectedFeatures()
         #cartuple = (car[0].geometry().asPoint().x(),car[0].geometry().asPoint().y(),0)
-        cartuple = [0,car[0].geometry()]
-        print incidents
-        print car
+        cargeom = car[0].geometry()
+        carpoint = QgsPoint(cargeom.asPoint())
 
         for incident in incidents:
             attributes = ['id']
             #incidenttuple = (incident.geometry().asPoint().x(),incident.geometry().asPoint().y(),0)
-            incidenttuple = [1,incident.geometry()]
-            duo = [incidenttuple,cartuple]
-            print duo
+            incidentgeom = incident.geometry()
+            incidentpoint = QgsPoint(incidentgeom.asPoint())
+            duo = [incidentgeom,cargeom]
             #voeg selected brandweerauto en id aan lijst toe
             types = [QtCore.QVariant.String]
-            templayer = uf.createTempLayer('temp','POINT',carlayer.crs().postgisSrid(),attributes,types)
-            uf.insertTempFeatures(templayer, incidenttuple, [id])
-            self.setSelectedLayer(templayer)
+            templayer = uf.getLegendLayerByName(self.iface, "temp")
+            self.deleteTempFeat()
+            if not templayer:
+                templayer = uf.createTempLayer('temp','POINT',carlayer.crs().postgisSrid(),attributes,types)
+                uf.loadTempLayer(templayer)
+            uf.insertTempFeaturesGeom(templayer, duo, [[0,0],[0,0]])
+            #templayer = uf.getLegendLayerByName(self.iface, templayer)
             self.calculateRoute()
 
     def calculateRoute(self):
         # origin and destination must be in the set of tied_points
+        layer = uf.getLegendLayerByName(self.iface, "temp")
+        selected_sources = layer.getFeatures()
+        source_points = [feature.geometry().asPoint() for feature in selected_sources]
+        self.tied_points = source_points
         options = len(self.tied_points)
+        print self.tied_points
         if options > 1:
             # origin and destination are given as an index in the tied_points list
             origin = 0
@@ -352,7 +358,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             if not routes_layer:
                 attribs = ['id']
                 types = [QtCore.QVariant.String]
-                routes_layer = uf.createTempLayer('Routes','LINESTRING',self.network_layer.crs().postgisSrid(), attribs, types)
+                routes_layer = uf.createTempLayer('Routes','LINESTRING',layer.crs().postgisSrid(), attribs, types)
                 uf.loadTempLayer(routes_layer)
             # insert route line
             for route in routes_layer.getFeatures():
@@ -360,6 +366,15 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             uf.insertTempFeatures(routes_layer, [path], [['testing',100.00]])
             buffer = processing.runandload('qgis:fixeddistancebuffer',routes_layer,10.0,5,False,None)
             #self.refreshCanvas(routes_layer)
+
+    def deleteTempFeat(self):
+        templayer = uf.getLegendLayerByName(self.iface, "temp")
+        if templayer:
+            ids = uf.getAllFeatureIds(templayer)
+            templayer.startEditing()
+            for id in ids:
+                templayer.deleteFeature(id)
+            templayer.commitChanges()
 
     def deleteRoutes(self):
         routes_layer = uf.getLegendLayerByName(self.iface, "Routes")
