@@ -85,7 +85,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.graph = QgsGraph()
         self.tied_points = self.getSelectedAttribute()
         self.setNetworkButton.clicked.connect(self.buildNetwork)
-        self.shortestRouteButton.clicked.connect(self.calculateRoute)
+        self.shortestRouteButton.clicked.connect(self.calculateAllRoutes)
         self.clearRouteButton.clicked.connect(self.deleteRoutes)
         #self.serviceAreaButton.clicked.connect(self.calculateServiceArea)
         #self.bufferButton.clicked.connect(self.calculateBuffer)
@@ -305,25 +305,35 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         return
 
     def getAllIncidents(self):
-        incidents_layer = uf.getLegendLayerByName(self.iface, "Incidents")
-        if incidents_layer:
-            ids = uf.getAllFeatureIds(incidents_layer)
-        #uf.selectFeaturesByExpression(incidents_layer, self.expressionEdit.text(),ids) #self.expression klopt niet, moet nog ff kijken wat daar wel kan
-        uf.selectFeaturesByExpression(incidents_layer, "sid")
+        layer = uf.getLegendLayerByName(self.iface, "Incidents")
+        incidents = uf.getAllFeatures(layer)
+        return incidents
+
 
     def calculateAllRoutes(self):
         incidents = self.getAllIncidents()
-        layer = uf.getLegendLayerByName(self.iface, "brandweerautos")
-        self.updateAttribute.emit("sid")
-        car = self.tied_points
+        print incidents.values
+        incidentlayer = uf.getLegendLayerByName(self.iface,"Incidents")
+        incidentlayer.setSelectedFeatures([sid for sid in uf.getAllFeatures(incidentlayer)])
+        incidents = incidentlayer.selectedFeatures()
+        carlayer = uf.getLegendLayerByName(self.iface, "brandweerautos")
+        car = carlayer.selectedFeatures()
+        #cartuple = (car[0].geometry().asPoint().x(),car[0].geometry().asPoint().y(),0)
+        cartuple = [0,car[0].geometry()]
+        print incidents
+        print car
 
         for incident in incidents:
             attributes = ['id']
-            duo = [incident,car]
+            #incidenttuple = (incident.geometry().asPoint().x(),incident.geometry().asPoint().y(),0)
+            incidenttuple = [1,incident.geometry()]
+            duo = [incidenttuple,cartuple]
+            print duo
             #voeg selected brandweerauto en id aan lijst toe
             types = [QtCore.QVariant.String]
-            templayer = uf.createTempLayer('temp','POINT',self.network_layer.crs().postgisSrid(),attributes,types)
-            uf.insertTempFeatures(templayer, duo)
+            templayer = uf.createTempLayer('temp','POINT',carlayer.crs().postgisSrid(),attributes,types)
+            uf.insertTempFeatures(templayer, incidenttuple, [id])
+            self.setSelectedLayer(templayer)
             self.calculateRoute()
 
     def calculateRoute(self):
