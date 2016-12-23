@@ -294,7 +294,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             # get the points to be used as origin and destination
             # in this case gets the centroid of the selected features
             selected_sources = self.getSelectedLayer().selectedFeatures()
-            if source_points == []
+            if source_points == []:
                 source_points = [feature.geometry().centroid().asPoint() for feature in selected_sources]
             # build the graph including these points
             if len(source_points) > 1:
