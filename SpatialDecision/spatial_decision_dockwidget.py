@@ -288,13 +288,14 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         else:
             return
 
-    def buildNetwork(self):
+    def buildNetwork(self, source_points = []):
         self.network_layer = self.getNetwork()
         if self.network_layer:
             # get the points to be used as origin and destination
             # in this case gets the centroid of the selected features
             selected_sources = self.getSelectedLayer().selectedFeatures()
-            source_points = [feature.geometry().centroid().asPoint() for feature in selected_sources]
+            if source_points == []
+                source_points = [feature.geometry().centroid().asPoint() for feature in selected_sources]
             # build the graph including these points
             if len(source_points) > 1:
                 self.graph, self.tied_points = uf.makeUndirectedGraph(self.network_layer, source_points)
@@ -319,6 +320,9 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         car = carlayer.selectedFeatures()
         #cartuple = (car[0].geometry().asPoint().x(),car[0].geometry().asPoint().y(),0)
         cargeom = car[0].geometry()
+        if car == []:
+            print 'no selected car'
+            return
         carpoint = QgsPoint(cargeom.asPoint())
 
         for incident in incidents:
@@ -343,9 +347,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         layer = uf.getLegendLayerByName(self.iface, "temp")
         selected_sources = layer.getFeatures()
         source_points = [feature.geometry().asPoint() for feature in selected_sources]
-        self.tied_points = source_points
+        self.buildNetwork(source_points)
         options = len(self.tied_points)
-        print self.tied_points
         if options > 1:
             # origin and destination are given as an index in the tied_points list
             origin = 0
