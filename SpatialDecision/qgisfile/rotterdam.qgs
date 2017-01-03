@@ -3,12 +3,6 @@
   <title></title>
   <layer-tree-group expanded="1" checked="Qt::PartiallyChecked" name="">
     <customproperties/>
-    <layer-tree-layer expanded="1" checked="Qt::Checked" id="Routes20170103154402355" name="Routes">
-      <customproperties/>
-    </layer-tree-layer>
-    <layer-tree-layer expanded="1" checked="Qt::Checked" id="temp20170103154359421" name="temp">
-      <customproperties/>
-    </layer-tree-layer>
     <layer-tree-layer expanded="1" checked="Qt::Checked" id="roadblocks20170103121241271" name="roadblocks">
       <customproperties/>
     </layer-tree-layer>
@@ -26,10 +20,10 @@
   <mapcanvas>
     <units>meters</units>
     <extent>
-      <xmin>77810.12661377245967742</xmin>
-      <ymin>426175.67786384373903275</ymin>
-      <xmax>96663.81121747846191283</xmax>
-      <ymax>443532.34454823285341263</ymax>
+      <xmin>74551.90937313744507264</xmin>
+      <ymin>431103.9875894584110938</ymin>
+      <xmax>93405.59397684344730806</xmax>
+      <ymax>448460.65427384752547368</ymax>
     </extent>
     <rotation>0</rotation>
     <projections>1</projections>
@@ -70,8 +64,8 @@
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Buffer20170103135013772"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Routes20170103143450571"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Routes20170103143323135"/>
-      <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="temp20170103142656765"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="temp20170103153908183"/>
+      <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="temp20170103142656765"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="verzamelweg_distinct20161206161020930"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="firetrucks20170103121225255"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="posten20161213153910733"/>
@@ -106,21 +100,9 @@
       <item>roads20161216111629134</item>
       <item>firetrucks20170103121225255</item>
       <item>roadblocks20170103121241271</item>
-      <item>temp20170103154359421</item>
-      <item>Routes20170103154402355</item>
     </custom-order>
   </layer-tree-canvas>
   <legend updateDrawingOrder="true">
-    <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="Routes" showFeatureCount="0">
-      <filegroup open="true" hidden="false">
-        <legendlayerfile isInOverview="0" layerid="Routes20170103154402355" visible="1"/>
-      </filegroup>
-    </legendlayer>
-    <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="temp" showFeatureCount="0">
-      <filegroup open="true" hidden="false">
-        <legendlayerfile isInOverview="0" layerid="temp20170103154359421" visible="1"/>
-      </filegroup>
-    </legendlayer>
     <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="roadblocks" showFeatureCount="0">
       <filegroup open="true" hidden="false">
         <legendlayerfile isInOverview="0" layerid="roadblocks20170103121241271" visible="1"/>
@@ -143,119 +125,6 @@
     </legendlayer>
   </legend>
   <projectlayers>
-    <maplayer minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="1" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" geometry="Line" simplifyMaxScale="1" type="vector" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
-      <extent>
-        <xmin>84886.25869328268163372</xmin>
-        <ymin>429249</ymin>
-        <xmax>97749.6309999999939464</xmax>
-        <ymax>443053</ymax>
-      </extent>
-      <id>Routes20170103154402355</id>
-      <datasource>memory?geometry=LineString&amp;crs=EPSG:28992&amp;field=id:(0,0)&amp;field=length:(0,0)&amp;field=importance:(0,0)</datasource>
-      <keywordList>
-        <value></value>
-      </keywordList>
-      <layername>Routes</layername>
-      <srs>
-        <spatialrefsys>
-          <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.417,50.3319,465.552,-0.398957,0.343988,-1.8774,4.0725 +units=m +no_defs</proj4>
-          <srsid>2517</srsid>
-          <srid>28992</srid>
-          <authid>EPSG:28992</authid>
-          <description>Amersfoort / RD New</description>
-          <projectionacronym>sterea</projectionacronym>
-          <ellipsoidacronym>bessel</ellipsoidacronym>
-          <geographicflag>false</geographicflag>
-        </spatialrefsys>
-      </srs>
-      <provider encoding="System">memory</provider>
-      <previewExpression></previewExpression>
-      <vectorjoins/>
-      <layerDependencies/>
-      <expressionfields/>
-      <map-layer-style-manager current="">
-        <map-layer-style name=""/>
-      </map-layer-style-manager>
-      <edittypes>
-        <edittype widgetv2type="TextEdit" name="id">
-          <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
-        </edittype>
-        <edittype widgetv2type="TextEdit" name="length">
-          <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
-        </edittype>
-        <edittype widgetv2type="TextEdit" name="importance">
-          <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
-        </edittype>
-      </edittypes>
-      <renderer-v2 forceraster="0" symbollevels="0" type="singleSymbol" enableorderby="0">
-        <symbols>
-          <symbol alpha="1" clip_to_extent="1" type="line" name="0">
-            <layer pass="0" class="SimpleLine" locked="0">
-              <prop k="capstyle" v="square"/>
-              <prop k="customdash" v="5;2"/>
-              <prop k="customdash_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="customdash_unit" v="MM"/>
-              <prop k="draw_inside_polygon" v="0"/>
-              <prop k="joinstyle" v="bevel"/>
-              <prop k="line_color" v="112,96,183,255"/>
-              <prop k="line_style" v="solid"/>
-              <prop k="line_width" v="0.26"/>
-              <prop k="line_width_unit" v="MM"/>
-              <prop k="offset" v="0"/>
-              <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="offset_unit" v="MM"/>
-              <prop k="use_custom_dash" v="0"/>
-              <prop k="width_map_unit_scale" v="0,0,0,0,0,0"/>
-            </layer>
-          </symbol>
-        </symbols>
-        <rotation/>
-        <sizescale scalemethod="diameter"/>
-      </renderer-v2>
-      <labeling type="simple"/>
-      <customproperties/>
-      <blendMode>0</blendMode>
-      <featureBlendMode>0</featureBlendMode>
-      <layerTransparency>0</layerTransparency>
-      <displayfield></displayfield>
-      <label>0</label>
-      <labelattributes>
-        <label fieldname="" text="Label"/>
-        <family fieldname="" name="MS Shell Dlg 2"/>
-        <size fieldname="" units="pt" value="12"/>
-        <bold fieldname="" on="0"/>
-        <italic fieldname="" on="0"/>
-        <underline fieldname="" on="0"/>
-        <strikeout fieldname="" on="0"/>
-        <color fieldname="" red="0" blue="0" green="0"/>
-        <x fieldname=""/>
-        <y fieldname=""/>
-        <offset x="0" y="0" units="pt" yfieldname="" xfieldname=""/>
-        <angle fieldname="" value="0" auto="0"/>
-        <alignment fieldname="" value="center"/>
-        <buffercolor fieldname="" red="255" blue="255" green="255"/>
-        <buffersize fieldname="" units="pt" value="1"/>
-        <bufferenabled fieldname="" on=""/>
-        <multilineenabled fieldname="" on=""/>
-        <selectedonly on=""/>
-      </labelattributes>
-      <annotationform></annotationform>
-      <excludeAttributesWMS/>
-      <excludeAttributesWFS/>
-      <attributeactions/>
-      <editform></editform>
-      <editforminit/>
-      <editforminitcodesource>0</editforminitcodesource>
-      <editforminitfilepath></editforminitfilepath>
-      <editforminitcode><![CDATA[]]></editforminitcode>
-      <featformsuppress>0</featformsuppress>
-      <editorlayout>generatedlayout</editorlayout>
-      <widgets/>
-      <conditionalstyles>
-        <rowstyles/>
-        <fieldstyles/>
-      </conditionalstyles>
-    </maplayer>
     <maplayer minimumScale="0" maximumScale="1e+08" type="raster" hasScaleBasedVisibilityFlag="0">
       <extent>
         <xmin>-370406.08097423112485558</xmin>
@@ -868,115 +737,6 @@ def my_form_open(dialog, layer, feature):
           <config/>
         </widget>
       </widgets>
-      <conditionalstyles>
-        <rowstyles/>
-        <fieldstyles/>
-      </conditionalstyles>
-    </maplayer>
-    <maplayer minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="1" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" geometry="Point" simplifyMaxScale="1" type="vector" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
-      <extent>
-        <xmin>88713.46378959037247114</xmin>
-        <ymin>433699.63195210078265518</ymin>
-        <xmax>95742.79499999999825377</xmax>
-        <ymax>438271.28600000002188608</ymax>
-      </extent>
-      <id>temp20170103154359421</id>
-      <datasource>memory?geometry=Point&amp;crs=EPSG:28992&amp;field=id:(0,0)</datasource>
-      <keywordList>
-        <value></value>
-      </keywordList>
-      <layername>temp</layername>
-      <srs>
-        <spatialrefsys>
-          <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.417,50.3319,465.552,-0.398957,0.343988,-1.8774,4.0725 +units=m +no_defs</proj4>
-          <srsid>2517</srsid>
-          <srid>28992</srid>
-          <authid>EPSG:28992</authid>
-          <description>Amersfoort / RD New</description>
-          <projectionacronym>sterea</projectionacronym>
-          <ellipsoidacronym>bessel</ellipsoidacronym>
-          <geographicflag>false</geographicflag>
-        </spatialrefsys>
-      </srs>
-      <provider encoding="System">memory</provider>
-      <previewExpression></previewExpression>
-      <vectorjoins/>
-      <layerDependencies/>
-      <expressionfields/>
-      <map-layer-style-manager current="">
-        <map-layer-style name=""/>
-      </map-layer-style-manager>
-      <edittypes>
-        <edittype widgetv2type="TextEdit" name="id">
-          <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
-        </edittype>
-      </edittypes>
-      <renderer-v2 forceraster="0" symbollevels="0" type="singleSymbol" enableorderby="0">
-        <symbols>
-          <symbol alpha="1" clip_to_extent="1" type="marker" name="0">
-            <layer pass="0" class="SimpleMarker" locked="0">
-              <prop k="angle" v="0"/>
-              <prop k="color" v="242,8,227,255"/>
-              <prop k="horizontal_anchor_point" v="1"/>
-              <prop k="name" v="circle"/>
-              <prop k="offset" v="0,0"/>
-              <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="offset_unit" v="MM"/>
-              <prop k="outline_color" v="0,0,0,255"/>
-              <prop k="outline_style" v="solid"/>
-              <prop k="outline_width" v="0"/>
-              <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="outline_width_unit" v="MM"/>
-              <prop k="scale_method" v="diameter"/>
-              <prop k="size" v="2"/>
-              <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="size_unit" v="MM"/>
-              <prop k="vertical_anchor_point" v="1"/>
-            </layer>
-          </symbol>
-        </symbols>
-        <rotation/>
-        <sizescale scalemethod="diameter"/>
-      </renderer-v2>
-      <labeling type="simple"/>
-      <customproperties/>
-      <blendMode>0</blendMode>
-      <featureBlendMode>0</featureBlendMode>
-      <layerTransparency>0</layerTransparency>
-      <displayfield></displayfield>
-      <label>0</label>
-      <labelattributes>
-        <label fieldname="" text="Label"/>
-        <family fieldname="" name="MS Shell Dlg 2"/>
-        <size fieldname="" units="pt" value="12"/>
-        <bold fieldname="" on="0"/>
-        <italic fieldname="" on="0"/>
-        <underline fieldname="" on="0"/>
-        <strikeout fieldname="" on="0"/>
-        <color fieldname="" red="0" blue="0" green="0"/>
-        <x fieldname=""/>
-        <y fieldname=""/>
-        <offset x="0" y="0" units="pt" yfieldname="" xfieldname=""/>
-        <angle fieldname="" value="0" auto="0"/>
-        <alignment fieldname="" value="center"/>
-        <buffercolor fieldname="" red="255" blue="255" green="255"/>
-        <buffersize fieldname="" units="pt" value="1"/>
-        <bufferenabled fieldname="" on=""/>
-        <multilineenabled fieldname="" on=""/>
-        <selectedonly on=""/>
-      </labelattributes>
-      <annotationform></annotationform>
-      <excludeAttributesWMS/>
-      <excludeAttributesWFS/>
-      <attributeactions/>
-      <editform></editform>
-      <editforminit/>
-      <editforminitcodesource>0</editforminitcodesource>
-      <editforminitfilepath></editforminitfilepath>
-      <editforminitcode><![CDATA[]]></editforminitcode>
-      <featformsuppress>0</featformsuppress>
-      <editorlayout>generatedlayout</editorlayout>
-      <widgets/>
       <conditionalstyles>
         <rowstyles/>
         <fieldstyles/>
