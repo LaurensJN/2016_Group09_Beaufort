@@ -158,7 +158,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 #######
     def openScenario(self,filename=""):
         scenario_open = True
-        scenario_file = os.path.join(self.plugin_dir,'SpatialDecision\qgisfile','rotterdam.qgs')
+        scenario_file = os.path.join(self.plugin_dir,'qgisfile','rotterdam.qgs')
         # check if file exists
         if os.path.isfile(scenario_file):
             self.iface.addProject(scenario_file)
@@ -275,7 +275,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         roads_layer = uf.getLegendLayerByName(self.iface, "roads")
         if roads_layer:
             # see if there is an obstacles layer to subtract roads from the network
-            obstacles_layer = uf.getLegendLayerByName(self.iface, "Obstacles")
+            obstacles_layer = uf.getLegendLayerByName(self.iface, "roadblocks")
             if obstacles_layer:
                 # retrieve roads outside obstacles (inside = False)
                 features = uf.getFeaturesByIntersection(roads_layer, obstacles_layer, False)
@@ -306,17 +306,23 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         return
 
     def getAllIncidents(self):
-        layer = uf.getLegendLayerByName(self.iface, "Incidents")
+        layer = uf.getLegendLayerByName(self.iface, "roadblocks")
         incidents = uf.getAllFeatures(layer)
         return incidents
 
 
     def calculateAllRoutes(self):
+        roadblocks = uf.getLegendLayerByName(self.iface, "roadblocks")
+        if roadblocks:
+            self.network_layer = self.getNetwork()
+            roadblockFeat = uf.getAllFeatureIds(roadblocks)
+            roadblockgeom = [i.geom for i in roadblockFeat]
+            setPointAttributes(self.network_layer,roadblockgeom)
         incidents = self.getAllIncidents()
-        incidentlayer = uf.getLegendLayerByName(self.iface,"Incidents")
+        incidentlayer = uf.getLegendLayerByName(self.iface,"roadblocks")
         incidentlayer.setSelectedFeatures([sid for sid in uf.getAllFeatures(incidentlayer)])
         incidents = incidentlayer.selectedFeatures()
-        carlayer = uf.getLegendLayerByName(self.iface, "brandweerautos")
+        carlayer = uf.getLegendLayerByName(self.iface, "firetrucks")
         car = carlayer.selectedFeatures()
         #cartuple = (car[0].geometry().asPoint().x(),car[0].geometry().asPoint().y(),0)
         cargeom = car[0].geometry()
@@ -342,14 +348,20 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             #templayer = uf.getLegendLayerByName(self.iface, templayer)
             self.calculateRoute()
         routes = uf.getLegendLayerByName(self.iface, "Routes")
+        uf.addFields(routes,['length','importance'],[QtCore.QVariant.Double,QtCore.QVariant.Double])
         provider = routes.dataProvider()
         features = provider.getFeatures()
         routes.startEditing()
+        dist = []
         for feature in features:
             geom = feature.geometry()
-            routes.changeAttributeValue(feature.id(),1,geom.length())
+            routes.changeAttributeValue(feature.id(), 1, geom.length())
+            dist.append([geom.length(),feature.id()])
+        dist.sort(reverse=True)
+        maxdist = dist[0][0]
+        for lnth,fid in dist:
+            routes.changeAttributeValue(fid,2,500-(lnth/maxdist)*500)
         routes.commitChanges()
-
 
     def calculateRoute(self):
         # origin and destination must be in the set of tied_points
@@ -368,17 +380,16 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             routes_layer = uf.getLegendLayerByName(self.iface, "Routes")
             # create one if it doesn't exist
             if not routes_layer:
-                attribs = ['id','length']
-                types = [QtCore.QVariant.String,QtCore.QVariant.Double]
+                attribs = ['id']
+                types = [QtCore.QVariant.String]
                 routes_layer = uf.createTempLayer('Routes','LINESTRING',layer.crs().postgisSrid(), attribs, types)
                 uf.loadTempLayer(routes_layer)
             # insert route line
             lastid = 0
             for route in routes_layer.getFeatures():
-                print route.id()
                 lastid = route.id()
             uf.insertTempFeatures(routes_layer, [path], [[lastid,1]])
-            buffer = processing.runandload('qgis:fixeddistancebuffer',routes_layer,10.0,5,False,None)
+            #buffer = processing.runandload('qgis:fixeddistancebuffer',routes_layer,10.0,5,False,None)
             #self.refreshCanvas(routes_layer)
 
     def deleteTempFeat(self):
@@ -528,6 +539,34 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def filterFeaturesExpression(self):
         layer = self.getSelectedLayer()
         uf.filterFeaturesByExpression(layer, self.expressionEdit.text())
+
+    def setPointAttributes(network_layer, points=list):
+        provider = network_layer.dataProvider()
+        spIdex = QgsSpatialIndex()
+        feat = QgsFeature()
+        fit = provider.getFeatures()
+        while fit.nextFeature(feat):
+            spIndex.insertFeature(feat)
+        for point in points:
+            pt = QgsPoint(point)
+            nearestIds = spIndex.nearestNeighbor(pt,1)
+            featureId = nearestIds[0]
+            fit2 = lineLayer.getFeatures(QgsFeatureRequest().setFilterFid(featureId))
+            ftr = QgsFeature()
+            fit2.nextFeature(ftr)
+            print ftr
+
+        '''if network_layer:
+            director = QgsLineVectorLayerDirector(network_layer, -1, '', '', '', 3)
+            properter = QgsDistanceArcProperter()
+            director.addProperter(properter)
+            builder = QgsGraphBuilder(network_layer.crs())
+            for i,point in enumerate(points):
+                refpoint = (director.makeGraph(builder, point),i)
+                refpoints.append(refpoint)
+
+        '''
+        return refpoints
 
 
 
