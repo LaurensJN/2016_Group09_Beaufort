@@ -75,54 +75,54 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.iface.legendInterface().itemRemoved.connect(self.updateLayers)
         self.iface.legendInterface().itemAdded.connect(self.updateLayers)
         self.openScenarioButton.clicked.connect(self.openScenario)
-        self.saveScenarioButton.clicked.connect(self.saveScenario)
-        self.selectLayerCombo.activated.connect(self.setSelectedLayer)
-        self.selectAttributeCombo.activated.connect(self.setSelectedAttribute)
-        self.startCounterButton.clicked.connect(self.startCounter)
-        self.cancelCounterButton.clicked.connect(self.cancelCounter)
+        #self.saveScenarioButton.clicked.connect(self.saveScenario)
+        #self.selectLayerCombo.activated.connect(self.setSelectedLayer)
+        #self.selectAttributeCombo.activated.connect(self.setSelectedAttribute)
+        #self.startCounterButton.clicked.connect(self.startCounter)
+        #self.cancelCounterButton.clicked.connect(self.cancelCounter)
 
         # analysis
         self.graph = QgsGraph()
-        self.tied_points = self.getSelectedAttribute()
-        self.setNetworkButton.clicked.connect(self.buildNetwork)
+        #self.tied_points = self.getSelectedAttribute()
+        #self.setNetworkButton.clicked.connect(self.buildNetwork)
         self.shortestRouteButton.clicked.connect(self.calculateAllRoutes)
-        self.clearRouteButton.clicked.connect(self.deleteRoutes)
+        #self.clearRouteButton.clicked.connect(self.deleteRoutes)
         #self.serviceAreaButton.clicked.connect(self.calculateServiceArea)
         #self.bufferButton.clicked.connect(self.calculateBuffer)
         #self.selectBufferButton.clicked.connect(self.selectFeaturesBuffer)
         #self.makeIntersectionButton.clicked.connect(self.calculateIntersection)
         #self.selectRangeButton.clicked.connect(self.selectFeaturesRange)
         #self.expressionSelectButton.clicked.connect(self.selectAllFeaturesExpression)
-        self.expressionSelectButton.clicked.connect(self.getAllIncidents)
-        self.expressionFilterButton.clicked.connect(self.filterFeaturesExpression)
+        #self.expressionSelectButton.clicked.connect(self.getAllIncidents)
+        #self.expressionFilterButton.clicked.connect(self.filterFeaturesExpression)
 
         # visualisation
-        self.displayStyleButton.clicked.connect(self.displayBenchmarkStyle)
-        self.displayRangeButton.clicked.connect(self.displayContinuousStyle)
-        self.updateAttribute.connect(self.plotChart)
+        #self.displayStyleButton.clicked.connect(self.displayBenchmarkStyle)
+        #self.displayRangeButton.clicked.connect(self.displayContinuousStyle)
+        #self.updateAttribute.connect(self.plotChart)
 
         # reporting
-        self.featureCounterUpdateButton.clicked.connect(self.updateNumberFeatures)
-        self.saveMapButton.clicked.connect(self.saveMap)
-        self.saveMapPathButton.clicked.connect(self.selectFile)
+        #self.featureCounterUpdateButton.clicked.connect(self.updateNumberFeatures)
+        #self.saveMapButton.clicked.connect(self.saveMap)
+        #self.saveMapPathButton.clicked.connect(self.selectFile)
         self.updateAttribute.connect(self.extractAttributeSummary)
-        self.saveStatisticsButton.clicked.connect(self.saveTable)
+        #self.saveStatisticsButton.clicked.connect(self.saveTable)
 
         self.emitPoint = QgsMapToolEmitPoint(self.canvas)
-        self.featureCounterUpdateButton.clicked.connect(self.enterPoi)
+        #self.featureCounterUpdateButton.clicked.connect(self.enterPoi)
         self.emitPoint.canvasClicked.connect(self.getPoint)
 
         # set current UI values
-        self.counterProgressBar.setValue(0)
+        #self.counterProgressBar.setValue(0)
 
         # add button icons
         #self.medicButton.setIcon(QtGui.QIcon(':icons/medic_box.png'))
         #self.ambulanceButton.setIcon(QtGui.QIcon(':icons/ambulance.png'))
         #self.logoLabel.setPixmap(QtGui.QPixmap(':icons/ambulance.png'))
 
-        movie = QtGui.QMovie(':icons/loading2.gif')
+        #movie = QtGui.QMovie(':icons/loading2.gif')
         #self.logoLabel.setMovie(movie)
-        movie.start()
+        #movie.start()
 
         # add matplotlib Figure to chartFrame
         self.chart_figure = Figure()
@@ -132,11 +132,11 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.chart_subplot_pie = self.chart_figure.add_subplot(224)
         self.chart_figure.tight_layout()
         self.chart_canvas = FigureCanvas(self.chart_figure)
-        self.chartLayout.addWidget(self.chart_canvas)
+       #self.chartLayout.addWidget(self.chart_canvas)
 
         # initialisation
-        self.updateLayers()
-        self.openScenario()
+        #self.updateLayers()
+        #self.openScenario()
 
         #run simple tests
 
@@ -230,9 +230,9 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         # from here the timer is running in the background on a separate thread. user can continue working on QGIS.
         self.counterProgressBar.setValue(0)
         self.startCounterButton.setDisabled(True)
-        self.cancelCounterButton.setDisabled(False)
+        self.cancelCounterButton.setDisabled(True)
 
-    def cancelCounter(self):
+    '''def cancelCounter(self):
         # triggered if the user clicks the cancel button
         self.timerThread.stop()
         self.counterProgressBar.setValue(0)
@@ -246,7 +246,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.timerThread = None
         self.startCounterButton.setDisabled(False)
         self.cancelCounterButton.setDisabled(True)
-
+    '''
     def updateCounter(self, value):
         self.counterProgressBar.setValue(value)
 
