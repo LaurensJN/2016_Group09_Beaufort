@@ -157,7 +157,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 #   Data functions
 #######
     def openScenario(self,filename=""):
-        scenario_open = False
+        scenario_open = True
         scenario_file = os.path.join(self.plugin_dir,'SpatialDecision\qgisfile','rotterdam.qgs')
         # check if file exists
         if os.path.isfile(scenario_file):
@@ -272,7 +272,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 #######
     # route functions
     def getNetwork(self):
-        roads_layer = uf.getLegendLayerByName(self.iface, "Wegen")
+        roads_layer = uf.getLegendLayerByName(self.iface, "roads")
         if roads_layer:
             # see if there is an obstacles layer to subtract roads from the network
             obstacles_layer = uf.getLegendLayerByName(self.iface, "Obstacles")
@@ -341,6 +341,15 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             uf.insertTempFeaturesGeom(templayer, duo, [[0,0],[0,0]])
             #templayer = uf.getLegendLayerByName(self.iface, templayer)
             self.calculateRoute()
+        routes = uf.getLegendLayerByName(self.iface, "Routes")
+        provider = routes.dataProvider()
+        features = provider.getFeatures()
+        routes.startEditing()
+        for feature in features:
+            geom = feature.geometry()
+            routes.changeAttributeValue(feature.id(),1,geom.length())
+        routes.commitChanges()
+
 
     def calculateRoute(self):
         # origin and destination must be in the set of tied_points
@@ -359,14 +368,16 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             routes_layer = uf.getLegendLayerByName(self.iface, "Routes")
             # create one if it doesn't exist
             if not routes_layer:
-                attribs = ['id']
-                types = [QtCore.QVariant.String]
+                attribs = ['id','length']
+                types = [QtCore.QVariant.String,QtCore.QVariant.Double]
                 routes_layer = uf.createTempLayer('Routes','LINESTRING',layer.crs().postgisSrid(), attribs, types)
                 uf.loadTempLayer(routes_layer)
             # insert route line
+            lastid = 0
             for route in routes_layer.getFeatures():
                 print route.id()
-            uf.insertTempFeatures(routes_layer, [path], [['testing',100.00]])
+                lastid = route.id()
+            uf.insertTempFeatures(routes_layer, [path], [[lastid,1]])
             buffer = processing.runandload('qgis:fixeddistancebuffer',routes_layer,10.0,5,False,None)
             #self.refreshCanvas(routes_layer)
 
