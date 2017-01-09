@@ -75,50 +75,50 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.iface.legendInterface().itemRemoved.connect(self.updateLayers)
         self.iface.legendInterface().itemAdded.connect(self.updateLayers)
         self.openScenarioButton.clicked.connect(self.openScenario)
-        #self.saveScenarioButton.clicked.connect(self.saveScenario)
-        #self.selectLayerCombo.activated.connect(self.setSelectedLayer)
-        #self.selectAttributeCombo.activated.connect(self.setSelectedAttribute)
-        #self.startCounterButton.clicked.connect(self.startCounter)
-        #self.cancelCounterButton.clicked.connect(self.cancelCounter)
+        self.saveScenarioButton.clicked.connect(self.saveScenario)
+        self.selectLayerCombo.activated.connect(self.setSelectedLayer)
+        self.selectAttributeCombo.activated.connect(self.setSelectedAttribute)
+        self.startCounterButton.clicked.connect(self.startCounter)
+        self.cancelCounterButton.clicked.connect(self.cancelCounter)
 
         # analysis
         self.graph = QgsGraph()
-        #self.tied_points = self.getSelectedAttribute()
-        #self.setNetworkButton.clicked.connect(self.buildNetwork)
+        self.tied_points = self.getSelectedAttribute()
+        self.setNetworkButton.clicked.connect(self.buildNetwork)
         self.shortestRouteButton.clicked.connect(self.calculateAllRoutes)
-        #self.clearRouteButton.clicked.connect(self.deleteRoutes)
-        #self.serviceAreaButton.clicked.connect(self.calculateServiceArea)
-        #self.bufferButton.clicked.connect(self.calculateBuffer)
-        #self.selectBufferButton.clicked.connect(self.selectFeaturesBuffer)
-        #self.makeIntersectionButton.clicked.connect(self.calculateIntersection)
-        #self.selectRangeButton.clicked.connect(self.selectFeaturesRange)
+        self.clearRouteButton.clicked.connect(self.deleteRoutes)
+        self.serviceAreaButton.clicked.connect(self.calculateServiceArea)
+        self.bufferButton.clicked.connect(self.calculateBuffer)
+        self.selectBufferButton.clicked.connect(self.selectFeaturesBuffer)
+        self.makeIntersectionButton.clicked.connect(self.calculateIntersection)
+        self.selectRangeButton.clicked.connect(self.selectFeaturesRange)
         #self.expressionSelectButton.clicked.connect(self.selectAllFeaturesExpression)
-        #self.expressionSelectButton.clicked.connect(self.getAllIncidents)
-        #self.expressionFilterButton.clicked.connect(self.filterFeaturesExpression)
+        self.expressionSelectButton.clicked.connect(self.getAllIncidents)
+        self.expressionFilterButton.clicked.connect(self.filterFeaturesExpression)
 
         # visualisation
-        #self.displayStyleButton.clicked.connect(self.displayBenchmarkStyle)
-        #self.displayRangeButton.clicked.connect(self.displayContinuousStyle)
-        #self.updateAttribute.connect(self.plotChart)
+        self.displayStyleButton.clicked.connect(self.displayBenchmarkStyle)
+        self.displayRangeButton.clicked.connect(self.displayContinuousStyle)
+        self.updateAttribute.connect(self.plotChart)
 
         # reporting
-        #self.featureCounterUpdateButton.clicked.connect(self.updateNumberFeatures)
-        #self.saveMapButton.clicked.connect(self.saveMap)
-        #self.saveMapPathButton.clicked.connect(self.selectFile)
+        self.featureCounterUpdateButton.clicked.connect(self.updateNumberFeatures)
+        self.saveMapButton.clicked.connect(self.saveMap)
+        self.saveMapPathButton.clicked.connect(self.selectFile)
         self.updateAttribute.connect(self.extractAttributeSummary)
-        #self.saveStatisticsButton.clicked.connect(self.saveTable)
+        self.saveStatisticsButton.clicked.connect(self.saveTable)
 
         self.emitPoint = QgsMapToolEmitPoint(self.canvas)
-        #self.featureCounterUpdateButton.clicked.connect(self.enterPoi)
+        self.featureCounterUpdateButton.clicked.connect(self.enterPoi)
         self.emitPoint.canvasClicked.connect(self.getPoint)
 
         # set current UI values
-        #self.counterProgressBar.setValue(0)
+        self.counterProgressBar.setValue(0)
 
         # add button icons
-        #self.medicButton.setIcon(QtGui.QIcon(':icons/medic_box.png'))
-        #self.ambulanceButton.setIcon(QtGui.QIcon(':icons/ambulance.png'))
-        #self.logoLabel.setPixmap(QtGui.QPixmap(':icons/ambulance.png'))
+        self.medicButton.setIcon(QtGui.QIcon(':icons/medic_box.png'))
+        self.ambulanceButton.setIcon(QtGui.QIcon(':icons/ambulance.png'))
+        self.logoLabel.setPixmap(QtGui.QPixmap(':icons/ambulance.png'))
 
         #movie = QtGui.QMovie(':icons/loading2.gif')
         #self.logoLabel.setMovie(movie)
@@ -132,10 +132,10 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.chart_subplot_pie = self.chart_figure.add_subplot(224)
         self.chart_figure.tight_layout()
         self.chart_canvas = FigureCanvas(self.chart_figure)
-       #self.chartLayout.addWidget(self.chart_canvas)
+        self.chartLayout.addWidget(self.chart_canvas)
 
         # initialisation
-        #self.updateLayers()
+        self.updateLayers()
         #self.openScenario()
 
         #run simple tests
@@ -232,7 +232,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.startCounterButton.setDisabled(True)
         self.cancelCounterButton.setDisabled(True)
 
-    '''def cancelCounter(self):
+    def cancelCounter(self):
         # triggered if the user clicks the cancel button
         self.timerThread.stop()
         self.counterProgressBar.setValue(0)
@@ -246,7 +246,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.timerThread = None
         self.startCounterButton.setDisabled(False)
         self.cancelCounterButton.setDisabled(True)
-    '''
+
     def updateCounter(self, value):
         self.counterProgressBar.setValue(value)
 
@@ -310,14 +310,41 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         incidents = uf.getAllFeatures(layer)
         return incidents
 
+    def setPointAttributes(self, network_layer, points=list):
+        provider = network_layer.dataProvider()
+        spIndex = QgsSpatialIndex()
+        feat = QgsFeature()
+        fit = provider.getFeatures()
+        while fit.nextFeature(feat):
+            spIndex.insertFeature(feat)
+        for point in points:
+            pt = QgsPoint(point)
+            nearestIds = spIndex.nearestNeighbor(pt,1)
+            featureId = nearestIds[0]
+            fit2 = network_layer.getFeatures(QgsFeatureRequest().setFilterFid(featureId))
+            ftr = QgsFeature()
+            fit2.nextFeature(ftr)
+        refpoints = []
+
+        if network_layer:
+            director = QgsLineVectorLayerDirector(network_layer, -1, '', '', '', 3)
+            properter = QgsDistanceArcProperter()
+            director.addProperter(properter)
+            builder = QgsGraphBuilder(network_layer.crs())
+            for point in points: #get point on graph for point in layer of firetrucks
+                refpoint = (director.makeGraph(builder, [point]),point)
+                refpoints.append(refpoint)
+        return refpoints
+
 
     def calculateAllRoutes(self):
         roadblocks = uf.getLegendLayerByName(self.iface, "roadblocks")
         if roadblocks:
             self.network_layer = self.getNetwork()
-            roadblockFeat = uf.getAllFeatureIds(roadblocks)
-            roadblockgeom = [i.geom for i in roadblockFeat]
-            setPointAttributes(self.network_layer,roadblockgeom)
+            roadblockFeat = roadblocks.selectedFeatures()
+            roadblockgeom = [i.geometry() for i in roadblockFeat]
+            roadblockpoints = [i.asPoint() for i in roadblockgeom]
+            self.setPointAttributes(self.network_layer,roadblockpoints)
         incidents = self.getAllIncidents()
         incidentlayer = uf.getLegendLayerByName(self.iface,"roadblocks")
         incidentlayer.setSelectedFeatures([sid for sid in uf.getAllFeatures(incidentlayer)])
@@ -353,15 +380,40 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         features = provider.getFeatures()
         routes.startEditing()
         dist = []
+        incidentid = uf.getAllFeatureIds(incidentlayer)
+        incidentimportance = uf.getAllFeatureValues(incidentlayer,"importance")
+        incidentcompleteblock = uf.getAllFeatureValues(incidentlayer,"full block")
         for feature in features:
             geom = feature.geometry()
             routes.changeAttributeValue(feature.id(), 1, geom.length())
             dist.append([geom.length(),feature.id()])
         dist.sort(reverse=True)
         maxdist = dist[0][0]
+        routedecision = []
         for lnth,fid in dist:
-            routes.changeAttributeValue(fid,2,500-(lnth/maxdist)*500)
+            totimp = incidentimportance[fid-1] + incidentcompleteblock[fid-1]*50 + (500-(lnth/maxdist)*500)
+            routes.changeAttributeValue(fid,2,totimp)
+            routedecision.append((totimp,fid))
         routes.commitChanges()
+        routedecision.sort()
+        riderouteId = routedecision[-1][1]
+        print riderouteId
+        request = QgsFeatureRequest()
+        request.setFilterFids([riderouteId])
+        features = routes.getFeatures(request)
+        goal_layer = uf.getLegendLayerByName(self.iface, "goal")
+        if goal_layer:
+            pass
+            #delete layer
+        else:
+            attribs = ['importance']
+            goal_layer = uf.createTempLayer('goal','LINESTRING',routes.crs().postgisSrid(), attribs,[QtCore.QVariant.String])
+            uf.loadTempLayer(goal_layer)
+        for feature in features:
+            print feature
+            fgeom = feature.geometry()
+        path  = fgeom.asPolyline()
+        uf.insertTempFeatures(goal_layer, [path], [[routedecision[-1][0], 1]])
 
     def calculateRoute(self):
         # origin and destination must be in the set of tied_points
@@ -540,33 +592,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         layer = self.getSelectedLayer()
         uf.filterFeaturesByExpression(layer, self.expressionEdit.text())
 
-    def setPointAttributes(network_layer, points=list):
-        provider = network_layer.dataProvider()
-        spIdex = QgsSpatialIndex()
-        feat = QgsFeature()
-        fit = provider.getFeatures()
-        while fit.nextFeature(feat):
-            spIndex.insertFeature(feat)
-        for point in points:
-            pt = QgsPoint(point)
-            nearestIds = spIndex.nearestNeighbor(pt,1)
-            featureId = nearestIds[0]
-            fit2 = lineLayer.getFeatures(QgsFeatureRequest().setFilterFid(featureId))
-            ftr = QgsFeature()
-            fit2.nextFeature(ftr)
-            print ftr
 
-        '''if network_layer:
-            director = QgsLineVectorLayerDirector(network_layer, -1, '', '', '', 3)
-            properter = QgsDistanceArcProperter()
-            director.addProperter(properter)
-            builder = QgsGraphBuilder(network_layer.crs())
-            for i,point in enumerate(points):
-                refpoint = (director.makeGraph(builder, point),i)
-                refpoints.append(refpoint)
-
-        '''
-        return refpoints
 
 
 
