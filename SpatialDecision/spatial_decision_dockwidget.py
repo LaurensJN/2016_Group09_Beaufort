@@ -212,7 +212,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.selectAttributeCombo.clear()
         if layer:
             #self.clearReport()
-            self.clearChart()
+            #self.clearChart()
             fields = uf.getFieldNames(layer)
             if fields:
                 self.selectAttributeCombo.addItems(fields)
