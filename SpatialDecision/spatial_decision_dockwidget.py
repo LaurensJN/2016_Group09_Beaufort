@@ -75,50 +75,51 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.iface.legendInterface().itemRemoved.connect(self.updateLayers)
         self.iface.legendInterface().itemAdded.connect(self.updateLayers)
         self.openScenarioButton.clicked.connect(self.openScenario)
-        self.saveScenarioButton.clicked.connect(self.saveScenario)
+        #self.saveScenarioButton.clicked.connect(self.saveScenario)
         self.selectLayerCombo.activated.connect(self.setSelectedLayer)
         self.selectAttributeCombo.activated.connect(self.setSelectedAttribute)
-        self.startCounterButton.clicked.connect(self.startCounter)
-        self.cancelCounterButton.clicked.connect(self.cancelCounter)
+        self.select_truck.activated.connect(self.setSelectedTruck)
+        #self.startCounterButton.clicked.connect(self.startCounter)
+        #self.cancelCounterButton.clicked.connect(self.cancelCounter)
 
         # analysis
         self.graph = QgsGraph()
         self.tied_points = self.getSelectedAttribute()
-        self.setNetworkButton.clicked.connect(self.buildNetwork)
+        #self.setNetworkButton.clicked.connect(self.buildNetwork)
         self.shortestRouteButton.clicked.connect(self.calculateAllRoutes)
-        self.clearRouteButton.clicked.connect(self.deleteRoutes)
-        self.serviceAreaButton.clicked.connect(self.calculateServiceArea)
-        self.bufferButton.clicked.connect(self.calculateBuffer)
-        self.selectBufferButton.clicked.connect(self.selectFeaturesBuffer)
-        self.makeIntersectionButton.clicked.connect(self.calculateIntersection)
-        self.selectRangeButton.clicked.connect(self.selectFeaturesRange)
+        #self.clearRouteButton.clicked.connect(self.deleteRoutes)
+        #self.serviceAreaButton.clicked.connect(self.calculateServiceArea)
+        #self.bufferButton.clicked.connect(self.calculateBuffer)
+        #self.selectBufferButton.clicked.connect(self.selectFeaturesBuffer)
+        #self.makeIntersectionButton.clicked.connect(self.calculateIntersection)
+        #self.selectRangeButton.clicked.connect(self.selectFeaturesRange)
         #self.expressionSelectButton.clicked.connect(self.selectAllFeaturesExpression)
-        self.expressionSelectButton.clicked.connect(self.getAllIncidents)
-        self.expressionFilterButton.clicked.connect(self.filterFeaturesExpression)
+        #self.expressionSelectButton.clicked.connect(self.getAllIncidents)
+        #self.expressionFilterButton.clicked.connect(self.filterFeaturesExpression)
 
         # visualisation
-        self.displayStyleButton.clicked.connect(self.displayBenchmarkStyle)
-        self.displayRangeButton.clicked.connect(self.displayContinuousStyle)
-        self.updateAttribute.connect(self.plotChart)
+        #self.displayStyleButton.clicked.connect(self.displayBenchmarkStyle)
+        #self.displayRangeButton.clicked.connect(self.displayContinuousStyle)
+        #self.updateAttribute.connect(self.plotChart)
 
         # reporting
-        self.featureCounterUpdateButton.clicked.connect(self.updateNumberFeatures)
-        self.saveMapButton.clicked.connect(self.saveMap)
-        self.saveMapPathButton.clicked.connect(self.selectFile)
-        self.updateAttribute.connect(self.extractAttributeSummary)
-        self.saveStatisticsButton.clicked.connect(self.saveTable)
+        #self.featureCounterUpdateButton.clicked.connect(self.updateNumberFeatures)
+        #self.saveMapButton.clicked.connect(self.saveMap)
+        #self.saveMapPathButton.clicked.connect(self.selectFile)
+        #self.updateAttribute.connect(self.extractAttributeSummary)
+        #self.saveStatisticsButton.clicked.connect(self.saveTable)
 
         self.emitPoint = QgsMapToolEmitPoint(self.canvas)
-        self.featureCounterUpdateButton.clicked.connect(self.enterPoi)
+        #self.featureCounterUpdateButton.clicked.connect(self.enterPoi)
         self.emitPoint.canvasClicked.connect(self.getPoint)
 
         # set current UI values
-        self.counterProgressBar.setValue(0)
+        #self.counterProgressBar.setValue(0)
 
         # add button icons
-        self.medicButton.setIcon(QtGui.QIcon(':icons/medic_box.png'))
-        self.ambulanceButton.setIcon(QtGui.QIcon(':icons/ambulance.png'))
-        self.logoLabel.setPixmap(QtGui.QPixmap(':icons/ambulance.png'))
+        #self.medicButton.setIcon(QtGui.QIcon(':icons/medic_box.png'))
+        #self.ambulanceButton.setIcon(QtGui.QIcon(':icons/ambulance.png'))
+        #self.logoLabel.setPixmap(QtGui.QPixmap(':icons/ambulance.png'))
 
         #movie = QtGui.QMovie(':icons/loading2.gif')
         #self.logoLabel.setMovie(movie)
@@ -130,15 +131,17 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.chart_subplot_line = self.chart_figure.add_subplot(222)
         self.chart_subplot_bar = self.chart_figure.add_subplot(223)
         self.chart_subplot_pie = self.chart_figure.add_subplot(224)
-        self.chart_figure.tight_layout()
+        #self.chart_figure.tight_layout()
         self.chart_canvas = FigureCanvas(self.chart_figure)
-        self.chartLayout.addWidget(self.chart_canvas)
+        #self.chartLayout.addWidget(self.chart_canvas)
 
         # initialisation
         self.updateLayers()
+        self.updateSelectedtruck()
         #self.openScenario()
 
         #run simple tests
+
 
     def closeEvent(self, event):
         # disconnect interface signals
@@ -201,14 +204,14 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def updateAttributes(self, layer):
         self.selectAttributeCombo.clear()
         if layer:
-            self.clearReport()
+            #self.clearReport()
             self.clearChart()
             fields = uf.getFieldNames(layer)
             if fields:
                 self.selectAttributeCombo.addItems(fields)
                 self.setSelectedAttribute()
                 # send list to the report list window
-                self.updateReport(fields)
+                #self.updateReport(fields)
 
 
     def setSelectedAttribute(self):
@@ -218,6 +221,32 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def getSelectedAttribute(self):
         field_name = self.selectAttributeCombo.currentText()
         return field_name
+
+    def setSelectedTruck(self):
+        field_name = self.select
+
+    def updateselectedTruck(self):
+        self.select_truck.clear()
+        trucks = []
+        trucklayer = uf.getLegendLayerByName(self.iface, "firetrucks")
+        truckid = uf.getAllFeatureIds(trucklayer)
+        request = QgsFeatureRequest()
+        request.setFilterFids([truckid])
+        idx = trucklayer.fieldNameIndex('Firetruck')
+        iterator = trucklayer.getFeatures(request)
+        for feature in iterator:
+            truck = feature.attributes()[idx]
+            trucks.append[truck]
+            next(iterator)
+        if trucks:
+            self.selectAttributeCombo.addItems(trucks)
+            self.setSelectedtruck()
+            # send list to the report list window
+            #self.updateReport
+
+    def setSelectedtruck(self):
+        field_name = self.select_truck.currentText()
+        self.updateSelectedtruck.emit(field_name)
 
 
     def startCounter(self):
@@ -302,7 +331,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 # the tied points are the new source_points on the graph
                 if self.graph and self.tied_points:
                     text = "network is built for %s points" % len(self.tied_points)
-                    self.insertReport(text)
+                    #self.insertReport(text)
         return
 
     def getAllIncidents(self):
