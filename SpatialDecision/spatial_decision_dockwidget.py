@@ -52,6 +52,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
     closingPlugin = QtCore.pyqtSignal()
     #custom signals
     updateAttribute = QtCore.pyqtSignal(str)
+    updateTruck = QtCore.pyqtSignal(str)
 
     def __init__(self, iface, parent=None):
         """Constructor."""
@@ -136,9 +137,15 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         #self.chartLayout.addWidget(self.chart_canvas)
 
         # initialisation
+<<<<<<< HEAD
         self.updateLayers()
         #self.updateSelectedtruck()
         self.openScenario()
+=======
+        #self.updateLayers()
+        self.updateSelectedTruck()
+        #self.openScenario()
+>>>>>>> origin/master
 
         #run simple tests
 
@@ -222,31 +229,31 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         field_name = self.selectAttributeCombo.currentText()
         return field_name
 
+<<<<<<< HEAD
     '''def setSelectedTruck(self):
         field_name = self.select'''
 
     '''def updateselectedTruck(self):
+=======
+
+
+    def updateSelectedTruck(self):
+>>>>>>> origin/master
         self.select_truck.clear()
         trucks = []
         trucklayer = uf.getLegendLayerByName(self.iface, "firetrucks")
-        truckid = uf.getAllFeatureIds(trucklayer)
-        request = QgsFeatureRequest()
-        request.setFilterFids([truckid])
-        idx = trucklayer.fieldNameIndex('Firetruck')
-        iterator = trucklayer.getFeatures(request)
-        for feature in iterator:
-            truck = feature.attributes()[idx]
-            trucks.append[truck]
-            next(iterator)
-        if trucks:
-            self.selectAttributeCombo.addItems(trucks)
-            self.setSelectedtruck()
-            # send list to the report list window
-            #self.updateReport
+        trucks = uf.getAllFeatureValues(trucklayer,'Firetruck')
+        self.select_truck.addItems(trucks)
+        self.setSelectedTruck()
+        return
 
-    def setSelectedtruck(self):
+    def setSelectedTruck(self):
         field_name = self.select_truck.currentText()
+<<<<<<< HEAD
         self.updateSelectedtruck.emit(field_name)'''
+=======
+        self.updateTruck.emit(field_name)
+>>>>>>> origin/master
 
 
     def startCounter(self):
