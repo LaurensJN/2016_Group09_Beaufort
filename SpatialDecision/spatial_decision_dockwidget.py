@@ -78,7 +78,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         #self.saveScenarioButton.clicked.connect(self.saveScenario)
         self.selectLayerCombo.activated.connect(self.setSelectedLayer)
         self.selectAttributeCombo.activated.connect(self.setSelectedAttribute)
-        self.select_truck.activated.connect(self.setSelectedTruck)
+        #self.select_truck.activated.connect(self.setSelectedTruck)
         #self.startCounterButton.clicked.connect(self.startCounter)
         #self.cancelCounterButton.clicked.connect(self.cancelCounter)
 
@@ -137,8 +137,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         # initialisation
         self.updateLayers()
-        self.updateSelectedtruck()
-        #self.openScenario()
+        #self.updateSelectedtruck()
+        self.openScenario()
 
         #run simple tests
 
@@ -161,13 +161,13 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 #######
     def openScenario(self,filename=""):
         scenario_open = True
-        scenario_file = os.path.join(self.plugin_dir,'rotterdam.qgs')
+        scenario_file = os.path.join(self.plugin_dir + '/icons/rotterdam.qgs')
         # check if file exists
         if os.path.isfile(scenario_file):
             self.iface.addProject(scenario_file)
             scenario_open = True
         else:
-            last_dir = uf.getLastDir("SDSS")
+            last_dir = uf.getLastDir("SpatialDecision")
             new_file = QtGui.QFileDialog.getOpenFileName(self, "", last_dir, "(*.qgs)")
             if new_file:
                 self.iface.addProject(unicode(new_file))
@@ -222,10 +222,10 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         field_name = self.selectAttributeCombo.currentText()
         return field_name
 
-    def setSelectedTruck(self):
-        field_name = self.select
+    '''def setSelectedTruck(self):
+        field_name = self.select'''
 
-    def updateselectedTruck(self):
+    '''def updateselectedTruck(self):
         self.select_truck.clear()
         trucks = []
         trucklayer = uf.getLegendLayerByName(self.iface, "firetrucks")
@@ -246,7 +246,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     def setSelectedtruck(self):
         field_name = self.select_truck.currentText()
-        self.updateSelectedtruck.emit(field_name)
+        self.updateSelectedtruck.emit(field_name)'''
 
 
     def startCounter(self):

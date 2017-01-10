@@ -191,6 +191,9 @@ class SpatialDecision:
             callback=self.run,
             parent=self.iface.mainWindow())
 
+
+
+
     #--------------------------------------------------------------------------
 
     def onClosePlugin(self):
