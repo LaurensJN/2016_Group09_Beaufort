@@ -399,7 +399,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             uf.loadTempLayer(templayer)
             self.calculateRoute()
         routes = uf.getLegendLayerByName(self.iface, "Routes")
-        uf.addFields(routes,['length','importance'],[QtCore.QVariant.Double,QtCore.QVariant.Double])
+        a =  QtCore.QVariant.Double
+        uf.addFields(routes,['length','tot_imp','length_imp','inc_imp','block_imp'],[a,a,a,a,a])
         provider = routes.dataProvider()
         features = provider.getFeatures()
         routes.startEditing()
@@ -414,29 +415,32 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         maxdist = dist[0][0]
         routedecision = []
         for lnth,fid in dist:
-            totimp = incidentimportance[fid-1] + incidentcompleteblock[fid-1]*50 + (500-(lnth/maxdist)*500)
+            lenimp,incimp,incblock = (500-(lnth/maxdist)*500),incidentimportance[fid-1],incidentcompleteblock[fid-1]*50
+            totimp = lenimp+incimp+incblock
             routes.changeAttributeValue(fid,2,totimp)
-            routedecision.append((totimp,fid))
+            routes.changeAttributeValue(fid,3,lenimp)
+            routes.changeAttributeValue(fid, 4, incimp)
+            routes.changeAttributeValue(fid, 5, incblock)
+            routedecision.append((totimp,fid,lenimp,incimp,incblock))
         routes.commitChanges()
         routedecision.sort()
         riderouteId = routedecision[-1][1]
-        print riderouteId
         request = QgsFeatureRequest()
         request.setFilterFids([riderouteId])
         features = routes.getFeatures(request)
         goal_layer = uf.getLegendLayerByName(self.iface, "goal")
+        b,c,d,e = [routedecision[-1][0],routedecision[-1][2],routedecision[-1][3],routedecision[-1][4]]
         if goal_layer:
             pass
             #delete layer
         else:
-            attribs = ['importance']
-            goal_layer = uf.createTempLayer('goal','LINESTRING',routes.crs().postgisSrid(), attribs,[QtCore.QVariant.String])
+            attribs = ['tot_imp','length_imp','inc_imp','block_imp']
+            goal_layer = uf.createTempLayer('goal','LINESTRING',routes.crs().postgisSrid(), attribs,[a,a,a,a])
             uf.loadTempLayer(goal_layer)
         for feature in features:
-            print feature
             fgeom = feature.geometry()
         path  = fgeom.asPolyline()
-        uf.insertTempFeatures(goal_layer, [path], [[routedecision[-1][0], 1]])
+        uf.insertTempFeatures(goal_layer, [path], [[b,c,d,e]])
         self.deleteRoutes()
 
     def calculateRoute(self):
