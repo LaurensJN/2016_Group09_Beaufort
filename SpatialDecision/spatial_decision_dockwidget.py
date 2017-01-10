@@ -394,6 +394,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             if not templayer:
                 templayer = uf.createTempLayer('temp','POINT',roadblocks.crs().postgisSrid(),attributes,types)
             uf.insertTempFeaturesGeom(templayer, duo, [[0,0],[0,0]])
+            uf.loadTempLayer(templayer)
             self.calculateRoute()
         routes = uf.getLegendLayerByName(self.iface, "Routes")
         uf.addFields(routes,['length','importance'],[QtCore.QVariant.Double,QtCore.QVariant.Double])
@@ -456,7 +457,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 attribs = ['id']
                 types = [QtCore.QVariant.String]
                 routes_layer = uf.createTempLayer('Routes','LINESTRING',layer.crs().postgisSrid(), attribs, types)
-                #uf.loadTempLayer(routes_layer)
+                uf.loadTempLayer(routes_layer)
             # insert route line
             lastid = 0
             for route in routes_layer.getFeatures():
@@ -476,12 +477,19 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     def deleteRoutes(self):
         routes_layer = uf.getLegendLayerByName(self.iface, "Routes")
+        temp_layer = uf.getLegendLayerByName(self.iface,"temp")
         if routes_layer:
             ids = uf.getAllFeatureIds(routes_layer)
             routes_layer.startEditing()
             for id in ids:
                 routes_layer.deleteFeature(id)
             routes_layer.commitChanges()
+        if temp_layer:
+            ids = uf.getAllFeatureIds(temp_layer)
+            temp_layer.startEditing()
+            for id in ids:
+                temp_layer.deleteFeature(id)
+            temp_layer.commitChanges()
 
     def getServiceAreaCutoff(self):
         cutoff = self.serviceAreaCutoffEdit.text()
