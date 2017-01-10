@@ -161,7 +161,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 #######
     def openScenario(self,filename=""):
         scenario_open = True
-        scenario_file = os.path.join(self.plugin_dir,'qgisfile','rotterdam.qgs')
+        scenario_file = os.path.join(self.plugin_dir,'rotterdam.qgs')
         # check if file exists
         if os.path.isfile(scenario_file):
             self.iface.addProject(scenario_file)
