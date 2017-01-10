@@ -310,35 +310,31 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         incidents = uf.getAllFeatures(layer)
         return incidents
 
-    def setPointAttributes(self, network_layer, roadblockFeat=list):
-        #roadblockgeom = [i.geometry() for i in roadblockFeat]
-        #roadblockpoints = [i.asPoint() for i in roadblockgeom]
+    def setPointAttributes(self, network_layer, points=list):
         provider = network_layer.dataProvider()
         spIndex = QgsSpatialIndex()
         feat = QgsFeature()
         fit = provider.getFeatures()
         while fit.nextFeature(feat):
             spIndex.insertFeature(feat)
-        roadids = []
-        for point in roadblockFeat:
-            rgeom = point.geometry()
-            rpoint = rgeom.asPoint()
-            pt = QgsPoint(rpoint)
+        for point in points:
+            pt = QgsPoint(point)
             nearestIds = spIndex.nearestNeighbor(pt,1)
             featureId = nearestIds[0]
-            roadids.append((point,featureId))
-        roadblock_layer = uf.getLegendLayerByName(self.iface, "roadblocks")
-        roadblock_layer.startEditing()
-        for (point,feautureId) in roadids:
-            request = QgsFeatureRequest()
-            request.setFilterFids([featureId])
-            idx = network_layer.fieldNameIndex('impor_road')
-            iterator = network_layer.getFeatures(request)
-            feature = next(iterator)
-            importance = feature.attributes()[idx]
-            roadblock_layer.changeAttributeValue(point.id(), 1, importance)
-        roadblock_layer.commitChanges()
-        return
+            fit2 = network_layer.getFeatures(QgsFeatureRequest().setFilterFid(featureId))
+            ftr = QgsFeature()
+            fit2.nextFeature(ftr)
+        refpoints = []
+
+        if network_layer:
+            director = QgsLineVectorLayerDirector(network_layer, -1, '', '', '', 3)
+            properter = QgsDistanceArcProperter()
+            director.addProperter(properter)
+            builder = QgsGraphBuilder(network_layer.crs())
+            for point in points: #get point on graph for point in layer of firetrucks
+                refpoint = (director.makeGraph(builder, [point]),point)
+                refpoints.append(refpoint)
+        return refpoints
 
 
     def calculateAllRoutes(self):
@@ -346,7 +342,9 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         if roadblocks:
             self.network_layer = self.getNetwork()
             roadblockFeat = roadblocks.selectedFeatures()
-            self.setPointAttributes(self.network_layer,roadblockFeat)
+            roadblockgeom = [i.geometry() for i in roadblockFeat]
+            roadblockpoints = [i.asPoint() for i in roadblockgeom]
+            self.setPointAttributes(self.network_layer,roadblockpoints)
         incidents = self.getAllIncidents()
         incidentlayer = uf.getLegendLayerByName(self.iface,"roadblocks")
         incidentlayer.setSelectedFeatures([sid for sid in uf.getAllFeatures(incidentlayer)])
@@ -399,6 +397,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         routes.commitChanges()
         routedecision.sort()
         riderouteId = routedecision[-1][1]
+        print riderouteId
         request = QgsFeatureRequest()
         request.setFilterFids([riderouteId])
         features = routes.getFeatures(request)
