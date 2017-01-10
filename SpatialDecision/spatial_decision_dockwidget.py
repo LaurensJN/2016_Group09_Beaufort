@@ -79,7 +79,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         #self.saveScenarioButton.clicked.connect(self.saveScenario)
         self.selectLayerCombo.activated.connect(self.setSelectedLayer)
         self.selectAttributeCombo.activated.connect(self.setSelectedAttribute)
-        #self.select_truck.activated.connect(self.setSelectedTruck)
+        self.select_truck.activated.connect(self.setSelectedTruck)
         #self.startCounterButton.clicked.connect(self.startCounter)
         #self.cancelCounterButton.clicked.connect(self.cancelCounter)
 
@@ -137,15 +137,9 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         #self.chartLayout.addWidget(self.chart_canvas)
 
         # initialisation
-<<<<<<< HEAD
-        self.updateLayers()
-        #self.updateSelectedtruck()
-        self.openScenario()
-=======
         #self.updateLayers()
         self.updateSelectedTruck()
         #self.openScenario()
->>>>>>> origin/master
 
         #run simple tests
 
@@ -212,7 +206,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.selectAttributeCombo.clear()
         if layer:
             #self.clearReport()
-            #self.clearChart()
+            self.clearChart()
             fields = uf.getFieldNames(layer)
             if fields:
                 self.selectAttributeCombo.addItems(fields)
@@ -229,16 +223,9 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         field_name = self.selectAttributeCombo.currentText()
         return field_name
 
-<<<<<<< HEAD
-    '''def setSelectedTruck(self):
-        field_name = self.select'''
-
-    '''def updateselectedTruck(self):
-=======
 
 
     def updateSelectedTruck(self):
->>>>>>> origin/master
         self.select_truck.clear()
         trucks = []
         trucklayer = uf.getLegendLayerByName(self.iface, "firetrucks")
@@ -249,12 +236,15 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     def setSelectedTruck(self):
         field_name = self.select_truck.currentText()
-<<<<<<< HEAD
-        self.updateSelectedtruck.emit(field_name)'''
-=======
         self.updateTruck.emit(field_name)
->>>>>>> origin/master
 
+    def getSelectedTruck(self):
+        Truck = self.select_truck.currentText()
+        Trucklayer = uf.getLegendLayerByName(self.iface, "firetrucks")
+        Exp = QgsExpression('''"Firetruck" = '{0}' ''' .format(Truck))
+        attr = Trucklayer.getFeatures(QgsFeatureRequest(Exp))
+        ids = [att for att in attr]
+        return ids
 
     def startCounter(self):
         # prepare the thread of the timed even or long loop
@@ -347,8 +337,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         return incidents
 
     def setPointAttributes(self, network_layer, roadblockFeat=list):
-        #roadblockgeom = [i.geometry() for i in roadblockFeat]
-        #roadblockpoints = [i.asPoint() for i in roadblockgeom]
+        # roadblockgeom = [i.geometry() for i in roadblockFeat]
+        # roadblockpoints = [i.asPoint() for i in roadblockgeom]
         provider = network_layer.dataProvider()
         spIndex = QgsSpatialIndex()
         feat = QgsFeature()
@@ -360,12 +350,12 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             rgeom = point.geometry()
             rpoint = rgeom.asPoint()
             pt = QgsPoint(rpoint)
-            nearestIds = spIndex.nearestNeighbor(pt,1)
+            nearestIds = spIndex.nearestNeighbor(pt, 1)
             featureId = nearestIds[0]
-            roadids.append((point,featureId))
+            roadids.append((point, featureId))
         roadblock_layer = uf.getLegendLayerByName(self.iface, "roadblocks")
         roadblock_layer.startEditing()
-        for (point,feautureId) in roadids:
+        for (point, feautureId) in roadids:
             request = QgsFeatureRequest()
             request.setFilterFids([featureId])
             idx = network_layer.fieldNameIndex('impor_road')
@@ -379,37 +369,30 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     def calculateAllRoutes(self):
         roadblocks = uf.getLegendLayerByName(self.iface, "roadblocks")
+        Truck = self.getSelectedTruck()
         if roadblocks:
             self.network_layer = self.getNetwork()
             roadblockFeat = roadblocks.selectedFeatures()
-            roadblockgeom = [i.geometry() for i in roadblockFeat]
-            roadblockpoints = [i.asPoint() for i in roadblockgeom]
-            self.setPointAttributes(self.network_layer,roadblockpoints)
-        incidents = self.getAllIncidents()
+            self.setPointAttributes(self.network_layer,roadblockFeat)
         incidentlayer = uf.getLegendLayerByName(self.iface,"roadblocks")
         incidentlayer.setSelectedFeatures([sid for sid in uf.getAllFeatures(incidentlayer)])
         incidents = incidentlayer.selectedFeatures()
-        carlayer = uf.getLegendLayerByName(self.iface, "firetrucks")
-        car = carlayer.selectedFeatures()
-        #cartuple = (car[0].geometry().asPoint().x(),car[0].geometry().asPoint().y(),0)
-        cargeom = car[0].geometry()
-        if car == []:
+        Truckgeom = Truck[0].geometry()
+        if Truck == []:
             print 'no selected car'
             return
-        carpoint = QgsPoint(cargeom.asPoint())
 
         for incident in incidents:
             attributes = ['id']
-            #incidenttuple = (incident.geometry().asPoint().x(),incident.geometry().asPoint().y(),0)
             incidentgeom = incident.geometry()
             incidentpoint = QgsPoint(incidentgeom.asPoint())
-            duo = [incidentgeom,cargeom]
+            duo = [incidentgeom,Truckgeom]
             #voeg selected brandweerauto en id aan lijst toe
             types = [QtCore.QVariant.String]
             templayer = uf.getLegendLayerByName(self.iface, "temp")
             self.deleteTempFeat()
             if not templayer:
-                templayer = uf.createTempLayer('temp','POINT',carlayer.crs().postgisSrid(),attributes,types)
+                templayer = uf.createTempLayer('temp','POINT',roadblocks.crs().postgisSrid(),attributes,types)
                 uf.loadTempLayer(templayer)
             uf.insertTempFeaturesGeom(templayer, duo, [[0,0],[0,0]])
             #templayer = uf.getLegendLayerByName(self.iface, templayer)
