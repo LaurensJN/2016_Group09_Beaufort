@@ -137,7 +137,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         #self.chartLayout.addWidget(self.chart_canvas)
 
         # initialisation
-        #self.updateLayers()
+        self.updateLayers()
         self.updateSelectedTruck()
         #self.openScenario()
 
@@ -175,6 +175,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 scenario_open = True
         if scenario_open:
             self.updateLayers()
+            self.updateSelectedTruck()
+
 
     def saveScenario(self):
         self.iface.actionSaveProject()
