@@ -393,9 +393,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.deleteTempFeat()
             if not templayer:
                 templayer = uf.createTempLayer('temp','POINT',roadblocks.crs().postgisSrid(),attributes,types)
-                uf.loadTempLayer(templayer)
             uf.insertTempFeaturesGeom(templayer, duo, [[0,0],[0,0]])
-            #templayer = uf.getLegendLayerByName(self.iface, templayer)
             self.calculateRoute()
         routes = uf.getLegendLayerByName(self.iface, "Routes")
         uf.addFields(routes,['length','importance'],[QtCore.QVariant.Double,QtCore.QVariant.Double])
@@ -403,7 +401,6 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         features = provider.getFeatures()
         routes.startEditing()
         dist = []
-        incidentid = uf.getAllFeatureIds(incidentlayer)
         incidentimportance = uf.getAllFeatureValues(incidentlayer,"importance")
         incidentcompleteblock = uf.getAllFeatureValues(incidentlayer,"full block")
         for feature in features:
@@ -437,6 +434,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             fgeom = feature.geometry()
         path  = fgeom.asPolyline()
         uf.insertTempFeatures(goal_layer, [path], [[routedecision[-1][0], 1]])
+        self.deleteRoutes()
 
     def calculateRoute(self):
         # origin and destination must be in the set of tied_points
@@ -458,7 +456,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 attribs = ['id']
                 types = [QtCore.QVariant.String]
                 routes_layer = uf.createTempLayer('Routes','LINESTRING',layer.crs().postgisSrid(), attribs, types)
-                uf.loadTempLayer(routes_layer)
+                #uf.loadTempLayer(routes_layer)
             # insert route line
             lastid = 0
             for route in routes_layer.getFeatures():
