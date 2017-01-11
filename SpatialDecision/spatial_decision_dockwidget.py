@@ -80,6 +80,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.selectLayerCombo.activated.connect(self.setSelectedLayer)
         self.selectAttributeCombo.activated.connect(self.setSelectedAttribute)
         self.select_truck.activated.connect(self.setSelectedTruck)
+        self.solved_incident.clicked.connect(self.goback)
         #self.startCounterButton.clicked.connect(self.startCounter)
         #self.cancelCounterButton.clicked.connect(self.cancelCounter)
 
@@ -182,15 +183,19 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.iface.actionSaveProject()
 
     def updateLayers(self):
-        layers = uf.getLegendLayers(self.iface, 'all', 'all')
-        self.selectLayerCombo.clear()
-        if layers:
-            layer_names = uf.getLayersListNames(layers)
-            self.selectLayerCombo.addItems(layer_names)
-            self.setSelectedLayer()
-        else:
-            self.selectAttributeCombo.clear()
-            self.clearChart()
+        try:
+            layers = uf.getLegendLayers(self.iface, 'all', 'all')
+            self.selectLayerCombo.clear()
+            if layers:
+                layer_names = uf.getLayersListNames(layers)
+                self.selectLayerCombo.addItems(layer_names)
+                self.setSelectedLayer()
+            else:
+                self.selectAttributeCombo.clear()
+                self.clearChart()
+        except:
+            'layers is {0}'.format(layers)
+            return
 
     def setSelectedLayer(self):
         layer_name = self.selectLayerCombo.currentText()
@@ -442,6 +447,11 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         path  = fgeom.asPolyline()
         uf.insertTempFeatures(goal_layer, [path], [[b,c,d,e]])
         self.deleteRoutes()
+        self.stackedWidget.setCurrentIndex(1)
+
+
+    def goback(self):
+        self.stackedWidget.setCurrentIndex(0)
 
     def calculateRoute(self):
         # origin and destination must be in the set of tied_points
