@@ -80,7 +80,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.selectLayerCombo.activated.connect(self.setSelectedLayer)
         self.selectAttributeCombo.activated.connect(self.setSelectedAttribute)
         self.select_truck.activated.connect(self.setSelectedTruck)
-        self.solved_incident.clicked.connect(self.goback)
+        self.solved_incident.clicked.connect(self.incident_solved)
         #self.startCounterButton.clicked.connect(self.startCounter)
         #self.cancelCounterButton.clicked.connect(self.cancelCounter)
 
@@ -183,19 +183,15 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.iface.actionSaveProject()
 
     def updateLayers(self):
-        try:
-            layers = uf.getLegendLayers(self.iface, 'all', 'all')
-            self.selectLayerCombo.clear()
-            if layers:
-                layer_names = uf.getLayersListNames(layers)
-                self.selectLayerCombo.addItems(layer_names)
-                self.setSelectedLayer()
-            else:
-                self.selectAttributeCombo.clear()
-                self.clearChart()
-        except:
-            'layers is {0}'.format(layers)
-            return
+        layers = uf.getLegendLayers(self.iface)
+        self.selectLayerCombo.clear()
+        if layers:
+            layer_names = uf.getLayersListNames(layers)
+            self.selectLayerCombo.addItems(layer_names)
+            self.setSelectedLayer()
+        else:
+            self.selectAttributeCombo.clear()
+            self.clearChart()
 
     def setSelectedLayer(self):
         layer_name = self.selectLayerCombo.currentText()
@@ -344,8 +340,6 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         return incidents
 
     def setPointAttributes(self, network_layer, roadblockFeat=list):
-        # roadblockgeom = [i.geometry() for i in roadblockFeat]
-        # roadblockpoints = [i.asPoint() for i in roadblockgeom]
         provider = network_layer.dataProvider()
         spIndex = QgsSpatialIndex()
         feat = QgsFeature()
@@ -450,8 +444,21 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.stackedWidget.setCurrentIndex(1)
 
 
-    def goback(self):
-        self.stackedWidget.setCurrentIndex(0)
+    def incident_solved(self):
+        goal_layer = uf.getLegendLayerByName(self.iface,"goal")
+        trucklayer = uf.getLegendLayerByName(self.iface,"firetrucks")
+        goalFeat = goal_layer.getFeatures()
+        for feat in goalFeat:
+            geom = feat.geometry()
+        geomPoints = geom.asPolyline()
+        new_loc = geomPoints[0]
+        truckFeat = self.getSelectedTruck()
+        #truck = uf.getFieldValuesbyFeature(trucklayer,truckFeat,'Firetruck')
+        #self.deleteField(trucklayer,'Firetruck',truck)
+        #exp = '"$geometry" = {0}'.format(new_loc)
+        #uf.updateField(trucklayer,truck[0],exp)
+        print new_loc
+        #self.stackedWidget.setCurrentIndex(0)
 
     def calculateRoute(self):
         # origin and destination must be in the set of tied_points
@@ -506,6 +513,19 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             for id in ids:
                 temp_layer.deleteFeature(id)
             temp_layer.commitChanges()
+
+    def deleteField(self,layer,attribute,field):
+        if field and layer and attribute:
+            layer = uf.getLegendLayerByName(self.iface,layer)
+            ids = uf.getFeaturesByExpression()
+            Exp = QgsExpression('''"{0}" = '{1}' '''.format(attribute,field))
+            ids = layer.getFeatures(QgsFeatureRequest(Exp))
+            layer.startEditing()
+            for id in ids:
+                layer.deleteFeature(id)
+            layer.commitChanges()
+        else:
+            print 'something went wrong'
 
     def getServiceAreaCutoff(self):
         cutoff = self.serviceAreaCutoffEdit.text()

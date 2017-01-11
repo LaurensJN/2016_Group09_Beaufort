@@ -212,6 +212,14 @@ def fieldHasNullValues(layer, name):
         else:
             return False
 
+def getFieldValuesbyFeature(layer,features,attribute):
+    idx = layer.fieldNameIndex(attribute)
+    fields = []
+    for feature in features:
+        feature.attributes()[attribute]
+        field = feature.attributes()[idx]
+        fields.append(field)
+    return fields
 
 def getFieldValues(layer, fieldname, null=True, selection=False):
     attributes = []
