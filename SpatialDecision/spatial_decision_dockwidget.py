@@ -442,7 +442,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         uf.insertTempFeatures(goal_layer, [path], [[b,c,d,e]])
         self.deleteRoutes()
         self.stackedWidget.setCurrentIndex(1)
-
+        obstacles_layer = uf.getLegendLayerByName(self.iface, "roadblocks")
+        obstacles_layer.removeSelection()
 
     def incident_solved(self):
         goal_layer = uf.getLegendLayerByName(self.iface,"goal")
