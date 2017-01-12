@@ -219,6 +219,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         trucklayer.startEditing()
         trucklayer.changeGeometry(truckFeat[0].id(), new_loc)
         trucklayer.commitChanges()
+        self.change_status("busy")
         if goal_layer:
             self.deleteLayer(["goal"])
         self.stackedWidget.setCurrentIndex(2)
@@ -395,7 +396,9 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             roadblockFeat = roadblocks.selectedFeatures()
             self.setPointAttributes(self.network_layer,roadblockFeat)
         incidentlayer = uf.getLegendLayerByName(self.iface,"roadblocks")
-        incidentlayer.setSelectedFeatures([sid for sid in uf.getAllFeatures(incidentlayer)])
+        #incidentlayer.setSelectedFeatures([sid for sid in uf.getAllFeatures(incidentlayer)])
+        Exp = '''"Available" = 'unsolved' '''
+        uf.selectFeaturesByExpression(incidentlayer, Exp)
         incidents = incidentlayer.selectedFeatures()
         Truckgeom = Truck[0].geometry()
         if Truck == []:
@@ -466,8 +469,18 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         obstacles_layer.removeSelection()
 
     def incident_solved(self):
+        self.change_status("solved")
         self.stackedWidget.setCurrentIndex(0)
         #set incident on solved
+
+    def change_status(self,status):
+        roadblock_layer = uf.getLegendLayerByName(self.iface, "roadblocks")
+        truckFeat = self.getSelectedTruck()
+        locblock = QgsGeometry.truckFeat[0]
+        Exp = QgsExpression('''$geometry = {0} '''.format(locblock))
+        ids = roadblock_layer.getFeatures(QgsFeatureRequest(Exp))
+        for id in ids:
+            roadblock_layer.changeAttributeValue(id, 2, status)
 
     def calculateRoute(self):
         # origin and destination must be in the set of tied_points
