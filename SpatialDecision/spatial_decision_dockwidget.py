@@ -223,7 +223,6 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         if goal_layer:
             self.deleteLayer(["goal"])
         self.stackedWidget.setCurrentIndex(2)
-        #set roadblock on busy
 
     def updateAttributes(self, layer):
         self.selectAttributeCombo.clear()
@@ -250,12 +249,10 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     def updateSelectedTruck(self):
         self.select_truck.clear()
-        trucks = []
         trucklayer = uf.getLegendLayerByName(self.iface, "firetrucks")
         trucks = uf.getAllFeatureValues(trucklayer,'Firetruck')
         self.select_truck.addItems(trucks)
         self.setSelectedTruck()
-        return
 
     def setSelectedTruck(self):
         field_name = self.select_truck.currentText()
@@ -404,7 +401,9 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         if Truck == []:
             print 'no selected car'
             return
-
+        if incidents == []:
+            print 'no incidents'
+            return
         for incident in incidents:
             attributes = ['id']
             incidentgeom = incident.geometry()
@@ -451,9 +450,17 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         features = routes.getFeatures(request)
         goal_layer = uf.getLegendLayerByName(self.iface, "goal")
         b,c,d,e = [routedecision[-1][0],routedecision[-1][2],routedecision[-1][3],routedecision[-1][4]]
+        if e == 50:
+            f = 'Fully blocked'
+        else:
+            f = 'Half blocked'
+        #text = 'Total importance: {0}; Length importance {1}; Road importance {2}; blockage incident {3}'.format(b,c,d,f)
+        #textlist = text.split(';')
+        #for line in textlist:
+        #    item = self.QStandardItem(line)
+        #    self.RoadblockInfoList.appendRow(item)
         if goal_layer:
-            pass
-            #delete layer
+            self.deleteLayer(["goal"])
         else:
             attribs = ['tot_imp','length_imp','inc_imp','block_imp']
             goal_layer = uf.createTempLayer('goal','LINESTRING',routes.crs().postgisSrid(), attribs,[a,a,a,a])
@@ -476,11 +483,15 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def change_status(self,status):
         roadblock_layer = uf.getLegendLayerByName(self.iface, "roadblocks")
         truckFeat = self.getSelectedTruck()
-        locblock = truckFeat[0].geometry()
-        Exp = QgsExpression('''$geometry = {0} '''.format(locblock))
+        locblockgeom = truckFeat[0].geometry()
+        locblocktuple = locblockgeom.asPoint()
+        Exp = QgsExpression("distance(geomFromWKT('Point ({0} {1})'),  $geometry ) <= 100".format(locblocktuple[0],locblocktuple[1]))
         ids = roadblock_layer.getFeatures(QgsFeatureRequest(Exp))
-        for id in ids:
-            roadblock_layer.changeAttributeValue(id, 2, status)
+        roadblock_layer.startEditing()
+        for feat in ids:
+            roadblock_layer.changeAttributeValue(feat.id(), 2, status)
+        roadblock_layer.commitChanges()
+
 
     def calculateRoute(self):
         # origin and destination must be in the set of tied_points
