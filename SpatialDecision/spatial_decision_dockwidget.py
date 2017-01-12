@@ -476,7 +476,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def change_status(self,status):
         roadblock_layer = uf.getLegendLayerByName(self.iface, "roadblocks")
         truckFeat = self.getSelectedTruck()
-        locblock = QgsGeometry.truckFeat[0]
+        locblock = truckFeat[0].geometry()
         Exp = QgsExpression('''$geometry = {0} '''.format(locblock))
         ids = roadblock_layer.getFeatures(QgsFeatureRequest(Exp))
         for id in ids:
