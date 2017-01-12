@@ -75,12 +75,13 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.iface.newProjectCreated.connect(self.updateLayers)
         self.iface.legendInterface().itemRemoved.connect(self.updateLayers)
         self.iface.legendInterface().itemAdded.connect(self.updateLayers)
-        self.openScenarioButton.clicked.connect(self.openScenario)
+        #self.openScenarioButton.clicked.connect(self.openScenario)
         #self.saveScenarioButton.clicked.connect(self.saveScenario)
         self.selectLayerCombo.activated.connect(self.setSelectedLayer)
         self.selectAttributeCombo.activated.connect(self.setSelectedAttribute)
         self.select_truck.activated.connect(self.setSelectedTruck)
         self.solved_incident.clicked.connect(self.incident_solved)
+        self.StartDrivingButton.clicked.connect(self.StartDriving)
         #self.startCounterButton.clicked.connect(self.startCounter)
         #self.cancelCounterButton.clicked.connect(self.cancelCounter)
 
@@ -140,7 +141,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         # initialisation
         self.updateLayers()
         self.updateSelectedTruck()
-        #self.openScenario()
+        self.stackedWidget.setCurrentIndex(0)
+        self.openScenario()
 
         #run simple tests
 
@@ -204,6 +206,19 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         layer = uf.getLegendLayerByName(self.iface,layer_name)
         return layer
 
+    def StartDriving(self):
+        goal_layer = uf.getLegendLayerByName(self.iface,"goal")
+        trucklayer = uf.getLegendLayerByName(self.iface,"firetrucks")
+        goalFeat = goal_layer.getFeatures()
+        for feat in goalFeat:
+            geom = feat.geometry()
+        geomPoints = geom.asPolyline()
+        new_loc = QgsGeometry.fromPoint(geomPoints[0])
+        truckFeat = self.getSelectedTruck()
+        trucklayer.startEditing()
+        trucklayer.changeGeometry(truckFeat[0].id(), new_loc)
+        trucklayer.commitChanges()
+        #set roadblock on busy
 
     def updateAttributes(self, layer):
         self.selectAttributeCombo.clear()
@@ -445,17 +460,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
 
     def incident_solved(self):
-        goal_layer = uf.getLegendLayerByName(self.iface,"goal")
-        trucklayer = uf.getLegendLayerByName(self.iface,"firetrucks")
-        goalFeat = goal_layer.getFeatures()
-        for feat in goalFeat:
-            geom = feat.geometry()
-        geomPoints = geom.asPolyline()
-        new_loc = QgsGeometry.fromPoint(geomPoints[0])
-        truckFeat = self.getSelectedTruck()
-        trucklayer.startEditing()
-        trucklayer.changeGeometry(truckFeat[0].id(), new_loc)
-        trucklayer.commitChanges()
+        self.stackedWidget.setCurrentIndex(0)
+        #set incident on solved
 
     def calculateRoute(self):
         # origin and destination must be in the set of tied_points
