@@ -139,10 +139,11 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         #self.chartLayout.addWidget(self.chart_canvas)
 
         # initialisation
+        self.openScenario()
         self.updateLayers()
         self.updateSelectedTruck()
         self.stackedWidget.setCurrentIndex(0)
-        self.openScenario()
+
 
         #run simple tests
 
@@ -218,6 +219,9 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         trucklayer.startEditing()
         trucklayer.changeGeometry(truckFeat[0].id(), new_loc)
         trucklayer.commitChanges()
+        if goal_layer:
+            self.deleteLayer(["goal"])
+        self.stackedWidget.setCurrentIndex(2)
         #set roadblock on busy
 
     def updateAttributes(self, layer):
@@ -455,7 +459,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             fgeom = feature.geometry()
         path  = fgeom.asPolyline()
         uf.insertTempFeatures(goal_layer, [path], [[b,c,d,e]])
-        self.deleteRoutes()
+        if routes and templayer:
+            self.deleteLayer(["temp","Routes"])
         self.stackedWidget.setCurrentIndex(1)
         obstacles_layer = uf.getLegendLayerByName(self.iface, "roadblocks")
         obstacles_layer.removeSelection()
@@ -502,21 +507,12 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 templayer.deleteFeature(id)
             templayer.commitChanges()
 
-    def deleteRoutes(self):
-        routes_layer = uf.getLegendLayerByName(self.iface, "Routes")
-        temp_layer = uf.getLegendLayerByName(self.iface,"temp")
-        if routes_layer:
-            ids = uf.getAllFeatureIds(routes_layer)
-            routes_layer.startEditing()
-            for id in ids:
-                routes_layer.deleteFeature(id)
-            routes_layer.commitChanges()
-        if temp_layer:
-            ids = uf.getAllFeatureIds(temp_layer)
-            temp_layer.startEditing()
-            for id in ids:
-                temp_layer.deleteFeature(id)
-            temp_layer.commitChanges()
+    def deleteLayer(self,listnames):
+        layerid = []
+        for name in listnames:
+            layer = uf.getLegendLayerByName(self.iface,name)
+            layerid.append(layer.id())
+        QgsMapLayerRegistry.instance().removeMapLayers(layerid)
 
     def deleteField(self,layer,attribute,field):
         if field and layer and attribute:
