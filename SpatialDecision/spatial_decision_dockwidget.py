@@ -451,14 +451,11 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         for feat in goalFeat:
             geom = feat.geometry()
         geomPoints = geom.asPolyline()
-        new_loc = geomPoints[0]
+        new_loc = QgsGeometry.fromPoint(geomPoints[0])
         truckFeat = self.getSelectedTruck()
-        #truck = uf.getFieldValuesbyFeature(trucklayer,truckFeat,'Firetruck')
-        #self.deleteField(trucklayer,'Firetruck',truck)
-        #exp = '"$geometry" = {0}'.format(new_loc)
-        #uf.updateField(trucklayer,truck[0],exp)
-        print new_loc
-        #self.stackedWidget.setCurrentIndex(0)
+        trucklayer.startEditing()
+        trucklayer.changeGeometry(truckFeat[0].id(), new_loc)
+        trucklayer.commitChanges()
 
     def calculateRoute(self):
         # origin and destination must be in the set of tied_points
