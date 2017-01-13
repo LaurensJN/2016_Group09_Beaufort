@@ -36,7 +36,7 @@
      </size>
     </property>
     <property name="currentIndex">
-     <number>3</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="QWidget" name="verticalLayoutWidget">
@@ -101,7 +101,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QListView" name="RoadblockInfoList"/>
+        <widget class="QListWidget" name="RoadblockInfoList"/>
        </item>
        <item>
         <widget class="QPushButton" name="StartDrivingButton">

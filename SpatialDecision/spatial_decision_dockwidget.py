@@ -453,11 +453,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             f = 'Fully blocked'
         else:
             f = 'Half blocked'
-        #text = 'Total importance: {0}; Length importance {1}; Road importance {2}; blockage incident {3}'.format(b,c,d,f)
-        #textlist = text.split(';')
-        #for line in textlist:
-        #    item = self.QStandardItem(line)
-        #    self.RoadblockInfoList.appendRow(item)
+        self.RoadblockInfoList.addItems('Total importance: {0};Length importance {1};Road importance: {2};blockage incident: {3}'.format(int(b),int(c),d,f).split(';'))
         if goal_layer:
             self.deleteLayer(["goal"])
         else:
