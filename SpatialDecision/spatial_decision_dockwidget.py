@@ -78,10 +78,12 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         #self.saveScenarioButton.clicked.connect(self.saveScenario)
         self.selectLayerCombo.activated.connect(self.setSelectedLayer)
         self.selectAttributeCombo.activated.connect(self.setSelectedAttribute)
-        self.select_truck.activated.connect(self.setSelectedTruck)
-        self.solved_incident.clicked.connect(self.incident_solved)
+        self.SelectTruckCombo.activated.connect(self.setSelectedTruck)
+        self.SolvedIncidentButton.clicked.connect(self.incident_solved)
         self.StartDrivingButton.clicked.connect(self.StartDriving)
-        self.need_help.clicked.connect(self.needmorehelp)
+        self.NeedHelpButton.clicked.connect(self.needmorehelp)
+        self.GetNewIncidentButton.clicked.connect(self.calculateAllRoutes)
+        self.ChangeTruckButton.clicked.connect(self.changeTruck)
         #self.startCounterButton.clicked.connect(self.startCounter)
         #self.cancelCounterButton.clicked.connect(self.cancelCounter)
 
@@ -246,29 +248,34 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         field_name = self.selectAttributeCombo.currentText()
         return field_name
 
-
+    def changeTruck(self):
+        self.stackedWidget.setCurrentIndex(0)
 
     def updateSelectedTruck(self):
-        self.select_truck.clear()
+        self.SelectTruckCombo.clear()
         trucklayer = uf.getLegendLayerByName(self.iface, "firetrucks")
-
         trucks = uf.getAllFeatureValues(trucklayer,'Firetruck')
-        self.select_truck.addItems(trucks)
+        self.SelectTruckCombo.addItems(trucks)
         self.setSelectedTruck()
 
     def setSelectedTruck(self):
-        field_name = self.select_truck.currentText()
+        layer = uf.getLegendLayerByName(self.iface, "roadblocks")
+        self.canvas.setExtent(layer.extent())
+        self.canvas.zoomScale((self.canvas.scale() * 1.2))
+        self.canvas.refresh()
+
+        field_name = self.SelectTruckCombo.currentText()
         self.updateTruck.emit(field_name)
         layer = uf.getLegendLayerByName(self.iface,'firetrucks')
         layer.removeSelection()
         exp = '''"Firetruck" = '{0}' '''.format(field_name)
         trucklayer = uf.getLegendLayerByName(self.iface, "firetrucks")
         uf.selectFeaturesByExpression(trucklayer, exp)
-        truck = trucklayer.getFeatures(QgsFeatureRequest(exp)
-        truck_id = truck.id())
+        #truck = trucklayer.getFeatures(QgsFeatureRequest(exp)
+        #truck_id = truck.id()
 
-        renderer = QgsCategorizedSymbolRendererV2("id")
-        trucklayer.setRendererV2(renderer)
+        #renderer = QgsCategorizedSymbolRendererV2("id")
+        #trucklayer.setRendererV2(renderer)
         
         #symbols = trucklayer.rendererV2().symbols()
         #sym = symbols[0]
@@ -276,7 +283,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
 
     def getSelectedTruck(self):
-        Truck = self.select_truck.currentText()
+        Truck = self.SelectTruckCombo.currentText()
         Trucklayer = uf.getLegendLayerByName(self.iface, "firetrucks")
         Exp = QgsExpression('''"Firetruck" = '{0}' ''' .format(Truck))
         attr = Trucklayer.getFeatures(QgsFeatureRequest(Exp))
@@ -499,7 +506,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     def incident_solved(self):
         self.change_status("solved")
-        self.stackedWidget.setCurrentIndex(0)
+        self.stackedWidget.setCurrentIndex(3)
 
     def change_status(self,status):
         roadblock_layer = uf.getLegendLayerByName(self.iface, "roadblocks")
