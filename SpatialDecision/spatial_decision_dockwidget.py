@@ -81,6 +81,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.select_truck.activated.connect(self.setSelectedTruck)
         self.solved_incident.clicked.connect(self.incident_solved)
         self.StartDrivingButton.clicked.connect(self.StartDriving)
+        self.need_help.clicked.connect(self.needmorehelp)
         #self.startCounterButton.clicked.connect(self.startCounter)
         #self.cancelCounterButton.clicked.connect(self.cancelCounter)
 
@@ -368,7 +369,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         incidents = uf.getAllFeatures(layer)
         return incidents
 
-    def setPointAttributes(self, network_layer, roadblockFeat=list):
+    def setPointAttributes(self, network_layer, roadblockFeat=list,help=0):
         provider = network_layer.dataProvider()
         spIndex = QgsSpatialIndex()
         feat = QgsFeature()
@@ -391,7 +392,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             idx = network_layer.fieldNameIndex('impor_road')
             iterator = network_layer.getFeatures(request)
             feature = next(iterator)
-            importance = feature.attributes()[idx]
+            importance = feature.attributes()[idx]+help
             roadblock_layer.changeAttributeValue(point.id(), 1, importance)
         roadblock_layer.commitChanges()
         return
@@ -537,6 +538,23 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             uf.insertTempFeatures(routes_layer, [path], [[lastid,1]])
             #buffer = processing.runandload('qgis:fixeddistancebuffer',routes_layer,10.0,5,False,None)
             #self.refreshCanvas(routes_layer)
+
+    def needmorehelp(self):
+        self.iface.messageBar().pushMessage("MORE HELP IS COMING", level=10, duration=10)
+        obstacles_layer = uf.getLegendLayerByName(self.iface, "roadblocks")
+        truck_layer = uf.getLegendLayerByName(self.iface, "firetrucks")
+        truck = truck_layer.selectedFeatures()[0]
+        spIndex = QgsSpatialIndex()
+        features = obstacles_layer.getFeatures()
+        feat = QgsFeature()
+        while features.nextFeature(feat):
+            spIndex.insertFeature(feat)
+        nearestId = spIndex.nearestNeighbor(truck.geometry().asPoint(), 1)[0]
+        features = obstacles_layer.getFeatures()
+        for feat in features:
+            if feat.id() == nearestId:
+                nearestfeat = feat
+        self.setPointAttributes(self.network_layer, [nearestfeat], help=1000)
 
     def deleteTempFeat(self):
         templayer = uf.getLegendLayerByName(self.iface, "temp")
