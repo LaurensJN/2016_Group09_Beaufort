@@ -264,10 +264,14 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         exp = '''"Firetruck" = '{0}' '''.format(field_name)
         trucklayer = uf.getLegendLayerByName(self.iface, "firetrucks")
         uf.selectFeaturesByExpression(trucklayer, exp)
+        truck = trucklayer.getFeatures(QgsFeatureRequest(exp)
+        truck_id = truck.id())
 
+        renderer = QgsCategorizedSymbolRendererV2("id")
+        trucklayer.setRendererV2(renderer)
+        
         #symbols = trucklayer.rendererV2().symbols()
         #sym = symbols[0]
-        #sym.setWidth(1)
         #sym.setColor(QtGui.QColor.fromRgb(0, 102, 102))
 
 
