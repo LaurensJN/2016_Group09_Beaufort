@@ -72,7 +72,6 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         # set up GUI operation signals
         # data
         self.iface.projectRead.connect(self.updateLayers)
-        self.iface.newProjectCreated.connect(self.updateLayers)
         self.iface.legendInterface().itemRemoved.connect(self.updateLayers)
         self.iface.legendInterface().itemAdded.connect(self.updateLayers)
         #self.openScenarioButton.clicked.connect(self.openScenario)
@@ -465,8 +464,17 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             attribs = ['tot_imp','length_imp','inc_imp','block_imp']
             goal_layer = uf.createTempLayer('goal','LINESTRING',routes.crs().postgisSrid(), attribs,[a,a,a,a])
             uf.loadTempLayer(goal_layer)
+        symbols = goal_layer.rendererV2().symbols()
+        sym = symbols[0]
+        sym.setWidth(1)
+        sym.setColor(QtGui.QColor.fromRgb(0,102,102))
+
         for feature in features:
             fgeom = feature.geometry()
+        box = fgeom.boundingBox()
+        self.canvas.setExtent(box)
+        self.canvas.zoomScale((self.canvas.scale() * 1.5))
+        self.canvas.refresh()
         path  = fgeom.asPolyline()
         uf.insertTempFeatures(goal_layer, [path], [[b,c,d,e]])
         if routes and templayer:
@@ -478,7 +486,6 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def incident_solved(self):
         self.change_status("solved")
         self.stackedWidget.setCurrentIndex(0)
-        #set incident on solved
 
     def change_status(self,status):
         roadblock_layer = uf.getLegendLayerByName(self.iface, "roadblocks")
@@ -692,15 +699,15 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         # loads a predefined style on a layer.
         # Best for simple, rule based styles, and categorical variables
         # attributes and values classes are hard coded in the style
-        layer = uf.getLegendLayerByName(self.iface, "Obstacles")
-        path = "%s/styles/" % QgsProject.instance().homePath()
+        layer = uf.getLegendLayerByName(self.iface, "goal")
+        path = "%s/icons/" % QgsProject.instance().homePath()
         # load a categorical style
-        layer.loadNamedStyle("%sobstacle_danger.qml" % path)
-        layer.triggerRepaint()
-        self.iface.legendInterface().refreshLayerSymbology(layer)
+        #layer.loadNamedStyle("%sobstacle_danger.qml" % path)
+        #layer.triggerRepaint()
+        #self.iface.legendInterface().refreshLayerSymbology(layer)
 
         # load a simple style
-        layer = uf.getLegendLayerByName(self.iface, "Buffers")
+        #layer = uf.getLegendLayerByName(self.iface, "goal")
         layer.loadNamedStyle("%sbuffer.qml" % path)
         layer.triggerRepaint()
         self.iface.legendInterface().refreshLayerSymbology(layer)

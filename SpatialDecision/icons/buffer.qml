@@ -13,7 +13,7 @@
           <prop k="offset_unit" v="MM"/>
           <prop k="outline_color" v="227,25,214,255"/>
           <prop k="outline_style" v="dash"/>
-          <prop k="outline_width" v="5"/>
+          <prop k="outline_width" v="1"/>
           <prop k="outline_width_unit" v="MM"/>
           <prop k="style" v="solid"/>
           <effect enabled="0" type="effectStack">
