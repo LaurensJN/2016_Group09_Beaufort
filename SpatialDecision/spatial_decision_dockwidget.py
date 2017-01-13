@@ -138,8 +138,9 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         #self.chartLayout.addWidget(self.chart_canvas)
 
         # initialisation
-        self.openScenario()
         self.updateLayers()
+        self.openScenario()
+
         self.updateSelectedTruck()
         self.stackedWidget.setCurrentIndex(0)
 
@@ -185,7 +186,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.iface.actionSaveProject()
 
     def updateLayers(self):
-        layers = uf.getLegendLayers(self.iface)
+        layers = uf.getLegendLayers(self.iface, 'all', 'all')
         self.selectLayerCombo.clear()
         if layers:
             layer_names = uf.getLayersListNames(layers)
@@ -249,6 +250,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def updateSelectedTruck(self):
         self.select_truck.clear()
         trucklayer = uf.getLegendLayerByName(self.iface, "firetrucks")
+
         trucks = uf.getAllFeatureValues(trucklayer,'Firetruck')
         self.select_truck.addItems(trucks)
         self.setSelectedTruck()
@@ -256,6 +258,17 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def setSelectedTruck(self):
         field_name = self.select_truck.currentText()
         self.updateTruck.emit(field_name)
+        layer = uf.getLegendLayerByName(self.iface,'firetrucks')
+        layer.removeSelection()
+        exp = '''"Firetruck" = '{0}' '''.format(field_name)
+        trucklayer = uf.getLegendLayerByName(self.iface, "firetrucks")
+        uf.selectFeaturesByExpression(trucklayer, exp)
+
+        #symbols = trucklayer.rendererV2().symbols()
+        #sym = symbols[0]
+        #sym.setWidth(1)
+        #sym.setColor(QtGui.QColor.fromRgb(0, 102, 102))
+
 
     def getSelectedTruck(self):
         Truck = self.select_truck.currentText()
