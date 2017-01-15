@@ -511,7 +511,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         if g == 1:
             extratext = ';Roadblock is near important building'
         else:
-            extratext = ';No important building nearby'
+            extratext = ''
         if d == 50:
             road = ';Small road'
         elif d == 150:
