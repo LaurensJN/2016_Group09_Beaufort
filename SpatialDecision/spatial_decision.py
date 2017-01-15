@@ -216,7 +216,7 @@ class SpatialDecision:
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""
 
-        #print "** UNLOAD SpatialDecision"
+        #print "** UNLOAD Beaufort"
 
         for action in self.actions:
             self.iface.removePluginMenu(
