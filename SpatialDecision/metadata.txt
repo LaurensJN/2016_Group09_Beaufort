@@ -7,17 +7,17 @@
 # This file should be included when you package your plugin.# Mandatory items:
 
 [general]
-name=SDSS Template
+name=Beaufort
 qgisMinimumVersion=2.0
-description=This is a SDSS template for the GEO1005 course
+description=This is a beaufort spatial decision plugin for the GEO1005 course of the TU delft
 version=0.1
-author=Jorge Gil, TU Delft
-email=j.a.lopesgil@tudelft.nl
+author=Laurens Oostwegel, Puck Flikweert, Jet ten Voorde, TU Delft
+email=p.l.mflikweert@student.tudelft.nl, l.j.n.oostwegel@student.nl, j.tenvoorde@tudelft.nl
 
-about=This plugin is a template Spatial Decision Support System, to be developed as a project for the GEO1005 course. It provides example of basic functionality to deal with data, spatial analysis and data visualisation.
+about=This plugin is designed as a spatial decision model, to help the fire brigade making decisions after a severe storm has brought damage to trees causing blockages on roads. To define the most urgent goal that firemen need to go to, several aspects are taken into account.
 
-tracker=https://github.com/jorgegil/GEO1005/issues
-repository=https://github.com/jorgegil/GEO1005
+tracker=https://github.com/LaurensJN/2016_Group09_Beaufort/issues
+repository=https://github.com/LaurensJN/2016_Group09_Beaufort
 # End of mandatory metadata
 
 # Recommended items:
@@ -26,9 +26,9 @@ repository=https://github.com/jorgegil/GEO1005
 # changelog=
 
 # Tags are comma separated with spaces allowed
-tags= GEO1005, vector, SDSS
+tags= GEO1005, vector, SDSS, firemen, storm
 
-homepage=https://github.com/jorgegil/GEO1005
+homepage=https://github.com/LaurensJN/2016_Group09_Beaufort
 category=Plugins
 icon=icon.png
 # experimental flag
