@@ -271,6 +271,9 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         exp = '''"Firetruck" = '{0}' '''.format(field_name)
         trucklayer = uf.getLegendLayerByName(self.iface, "firetrucks")
         uf.selectFeaturesByExpression(trucklayer, exp)
+
+        truckFeat = self.getSelectedTruck()
+
         #truck = trucklayer.getFeatures(QgsFeatureRequest(exp)
         #truck_id = truck.id()
 
