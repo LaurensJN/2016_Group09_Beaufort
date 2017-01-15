@@ -549,7 +549,7 @@ def my_form_open(dialog, layer, feature):
         </spatialrefsys>
       </srs>
       <provider encoding="System">ogr</provider>
-      <previewExpression></previewExpression>
+      <previewExpression>COALESCE( "full block", '&lt;NULL>' )</previewExpression>
       <vectorjoins/>
       <layerDependencies/>
       <expressionfields/>
@@ -564,6 +564,12 @@ def my_form_open(dialog, layer, feature):
           <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
         </edittype>
         <edittype widgetv2type="TextEdit" name="Available">
+          <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="Building">
+          <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="Help">
           <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
         </edittype>
       </edittypes>
