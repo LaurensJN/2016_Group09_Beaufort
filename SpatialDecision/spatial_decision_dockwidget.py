@@ -84,6 +84,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.NeedHelpButton.clicked.connect(self.needmorehelp)
         self.GetNewIncidentButton.clicked.connect(self.calculateAllRoutes)
         self.ChangeTruckButton.clicked.connect(self.changeTruck)
+        self.QuitButton.clicked.connect(self.close)
         #self.startCounterButton.clicked.connect(self.startCounter)
         #self.cancelCounterButton.clicked.connect(self.cancelCounter)
 
@@ -119,7 +120,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.emitPoint.canvasClicked.connect(self.getPoint)
 
         # set current UI values
-        #self.counterProgressBar.setValue(0)
+        self.counterProgressBar.setValue(0)
 
         # add button icons
         #self.medicButton.setIcon(QtGui.QIcon(':icons/medic_box.png'))
@@ -142,6 +143,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         # initialisation
         self.initialise()
+        self.changeTruck()
 
 
 
@@ -257,7 +259,13 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         return field_name
 
     def changeTruck(self):
+        layer = uf.getLegendLayerByName(self.iface, "roadblocks")
+        self.canvas.setExtent(layer.extent())
+        self.canvas.zoomScale((self.canvas.scale() * 1.2))
+        self.canvas.refresh()
+        self.counterProgressBar.setValue(0)
         self.stackedWidget.setCurrentIndex(0)
+
 
     def updateSelectedTruck(self):
         self.SelectTruckCombo.clear()
@@ -272,9 +280,6 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         if prevtruckFeats != []:
             prevtruckfeat = prevtruckFeats[0]
         layer = uf.getLegendLayerByName(self.iface, "roadblocks")
-        self.canvas.setExtent(layer.extent())
-        self.canvas.zoomScale((self.canvas.scale() * 1.2))
-        self.canvas.refresh()
         field_name = self.SelectTruckCombo.currentText()
         self.updateTruck.emit(field_name)
         trucklayer.removeSelection()
@@ -413,7 +418,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             roadblock_layer.changeAttributeValue(point.id(),1,road_imp)
             roadblock_layer.changeAttributeValue(point.id(),3,building)
             if help != 0:
-                roadblock_layer.changeAttrbuteValue(point.id(),4,help)
+                roadblock_layer.changeAttributeValue(point.id(),4,help)
         roadblock_layer.commitChanges()
         return
 
@@ -430,6 +435,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         return values
 
     def calculateAllRoutes(self):
+        self.stackedWidget.setCurrentIndex(0)
+        self.counterProgressBar.setValue(5)
         Truck = self.getSelectedTruck()
         incidentlayer = uf.getLegendLayerByName(self.iface,"roadblocks")
         #incidentlayer.setSelectedFeatures([sid for sid in uf.getAllFeatures(incidentlayer)])
@@ -438,12 +445,17 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         incidents = incidentlayer.selectedFeatures()
         Truckgeom = Truck[0].geometry()
         if Truck == []:
-            print 'no selected car'
+            self.iface.messageBar().pushMessage("Please select a truck", level=10, duration=10)
             return
         if incidents == []:
-            print 'no incidents'
+            self.iface.messageBar().pushMessage("All incidents are solved!", level=10, duration=10)
+            self.stackedWidget.setCurrentIndex(3)
             return
+        i = 1
+        n = 100. / len(incidents)
         for incident in incidents:
+            percentage = i*n
+            i += 1
             attributes = ['id']
             incidentgeom = incident.geometry()
             duo = [incidentgeom,Truckgeom]
@@ -455,7 +467,9 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 templayer = uf.createTempLayer('temp','POINT',incidentlayer.crs().postgisSrid(),attributes,types)
             uf.insertTempFeaturesGeom(templayer, duo, [[0,0],[0,0]])
             uf.loadTempLayer(templayer)
+            self.counterProgressBar.setValue(percentage)
             self.calculateRoute()
+
         routes = uf.getLegendLayerByName(self.iface, "Routes")
         a =  QtCore.QVariant.Double
         uf.addFields(routes,['length','tot_imp','length_imp','road_imp','block_imp'],[a,a,a,a,a])
@@ -473,6 +487,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         dist.sort(reverse=True)
         maxdist = dist[0][0]
         routedecision = []
+
         for lnth,fid in dist:
             lenimp,incimp,incblock,incbuild = (500-(lnth/maxdist)*500),incidentimportance[fid-1],incidentcompleteblock[fid-1]*50,incidentbuilding[fid-1]
             totimp = lenimp+incimp+incblock+incbuild*100
@@ -511,6 +526,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             attribs = ['tot_imp','length_imp','inc_imp','block_imp']
             goal_layer = uf.createTempLayer('goal','LINESTRING',routes.crs().postgisSrid(), attribs,[a,a,a,a])
             uf.loadTempLayer(goal_layer)
+
         symbols = goal_layer.rendererV2().symbols()
         sym = symbols[0]
         sym.setWidth(1)
