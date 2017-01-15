@@ -36,7 +36,7 @@
      </size>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="QWidget" name="verticalLayoutWidget">
@@ -57,7 +57,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="select_truck"/>
+        <widget class="QComboBox" name="SelectTruckCombo"/>
        </item>
        <item>
         <spacer name="verticalSpacer">
@@ -75,7 +75,7 @@
        <item>
         <widget class="QPushButton" name="shortestRouteButton">
          <property name="text">
-          <string>Start Calculation</string>
+          <string>Start Calculating Route</string>
          </property>
         </widget>
        </item>
@@ -125,14 +125,14 @@
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
-        <widget class="QPushButton" name="solved_incident">
+        <widget class="QPushButton" name="SolvedIncidentButton">
          <property name="text">
           <string>Solved current incident</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="need_help">
+        <widget class="QPushButton" name="NeedHelpButton">
          <property name="text">
           <string>Need more help</string>
          </property>
@@ -148,10 +148,17 @@
         <x>110</x>
         <y>150</y>
         <width>160</width>
-        <height>80</height>
+        <height>141</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout">
+       <item row="2" column="0">
+        <widget class="QPushButton" name="QuitButton">
+         <property name="text">
+          <string>Quit</string>
+         </property>
+        </widget>
+       </item>
        <item row="0" column="0">
         <widget class="QPushButton" name="GetNewIncidentButton">
          <property name="text">
@@ -160,9 +167,9 @@
         </widget>
        </item>
        <item row="1" column="0">
-        <widget class="QPushButton" name="pushButton_2">
+        <widget class="QPushButton" name="ChangeTruckButton">
          <property name="text">
-          <string>Quit</string>
+          <string>Change Firetruck</string>
          </property>
         </widget>
        </item>
