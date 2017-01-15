@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 """
 /***************************************************************************
- SpatialDecision
+ Beaufort
                                  A QGIS plugin
- This is a SDSS template for the GEO1005 course
+ This is a beaufort plugin for the GEO1005 course
                               -------------------
-        begin                : 2015-11-02
+        begin                : 2016-11-02
         git sha              : $Format:%H$
         copyright            : (C) 2015 by Jorge Gil, TU Delft
         email                : j.a.lopesgil@tudelft.nl
@@ -79,10 +79,10 @@ class SpatialDecision:
 
         # Declare instance attributes
         self.actions = []
-        self.menu = self.tr(u'&SDSS Template')
+        self.menu = self.tr(u'&Beaufort')
         # TODO: We are going to let the user set this up in a future iteration
-        self.toolbar = self.iface.addToolBar(u'SpatialDecision')
-        self.toolbar.setObjectName(u'SpatialDecision')
+        self.toolbar = self.iface.addToolBar(u'Beaufort')
+        self.toolbar.setObjectName(u'Beaufort')
 
         #print "** INITIALIZING SpatialDecision"
         if has_pydevd and is_debug:
@@ -187,7 +187,7 @@ class SpatialDecision:
         icon_path = self.plugin_dir + '/icons/icon.png'
         self.add_action(
             icon_path,
-            text=self.tr(u'SDSS Template'),
+            text=self.tr(u'Beaufort'),
             callback=self.run,
             parent=self.iface.mainWindow())
 
@@ -220,7 +220,7 @@ class SpatialDecision:
 
         for action in self.actions:
             self.iface.removePluginMenu(
-                self.tr(u'&SDSS Template'),
+                self.tr(u'&Beaufort'),
                 action)
             self.iface.removeToolBarIcon(action)
         # remove the toolbar
