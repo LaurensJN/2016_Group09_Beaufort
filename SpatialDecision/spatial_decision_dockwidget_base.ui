@@ -45,7 +45,7 @@
         <x>100</x>
         <y>20</y>
         <width>201</width>
-        <height>161</height>
+        <height>211</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
@@ -76,6 +76,13 @@
         <widget class="QPushButton" name="shortestRouteButton">
          <property name="text">
           <string>Start Calculating Route</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QProgressBar" name="counterProgressBar">
+         <property name="value">
+          <number>24</number>
          </property>
         </widget>
        </item>
