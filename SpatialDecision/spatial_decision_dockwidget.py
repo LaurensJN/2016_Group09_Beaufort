@@ -279,7 +279,6 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         prevtruckFeats = trucklayer.selectedFeatures()
         if prevtruckFeats != []:
             prevtruckfeat = prevtruckFeats[0]
-        layer = uf.getLegendLayerByName(self.iface, "roadblocks")
         field_name = self.SelectTruckCombo.currentText()
         self.updateTruck.emit(field_name)
         trucklayer.removeSelection()
