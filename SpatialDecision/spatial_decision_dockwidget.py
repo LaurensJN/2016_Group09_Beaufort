@@ -262,25 +262,37 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         getreport_layer = uf.getLegendLayerByName(self.iface, "roadblocks")
         start = uf.getAllFeatureValues(getreport_layer, "start time" )
         end = uf.getAllFeatureValues(getreport_layer,"end time" )
-        end2 = []
-        for n in end:
-            if n == NULL:
-                end2.append('')
-            else:
-                end2.append(n)
-        user = uf.getAllFeatureValues(getreport_layer, "solved by" )
-        user2 = []
-        for n in user:
-            if n == NULL:
-                user2.append('unsolved')
-            else:
-                user2.append('solved by {0}'.format(n))
-        self.reportList.clear()
-        txtlist = []
-        for n in range (len(start)):
-            txt = ' starttime {0} endtime {1} {2}'.format(start[n], end2[n], user2[n])
-            txtlist.append(txt)
-        self.reportList.addItems(txtlist)
+        user = uf.getAllFeatureValues(getreport_layer, "solved by")
+        self.reportList.setHorizontalHeaderLabels(['Start Time','End Time','Solved By'])
+        for row in range(len(start)):
+            item1 = QtGui.QTableWidgetItem(str(start[row]))
+            item2 = QtGui.QTableWidgetItem(str(end[row]))
+            item3 = QtGui.QTableWidgetItem(str(user[row]))
+            self.reportList.setItem(row,1,item1)
+            self.reportList.setItem(row, 2, item2)
+            self.reportList.setItem(row, 3, item3)
+            """
+end2 = []
+for n in end:
+    if n == NULL:
+        end2.append('')
+    else:
+        end2.append(n)
+
+user2 = []
+for n in user:
+    if n == NULL:
+        user2.append('unsolved')
+    else:
+        user2.append('solved by {0}'.format(n))
+self.reportList.clear()
+txtlist = []
+for n in range (len(start)):
+    txt = ' starttime {0} endtime {1} {2}'.format(start[n], end2[n], user2[n])
+    txtlist.append(txt)"""
+
+        self.reportList.setRowCount(len(start))
+        self.reportList.setColumnCount(3)
 
 
 
