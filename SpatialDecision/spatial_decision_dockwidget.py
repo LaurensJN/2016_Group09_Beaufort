@@ -227,7 +227,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         for feat in goalFeat:
             geom = feat.geometry()
         geomPoints = geom.asPolyline()
-        new_loc = QgsGeometry.fromPoint(geomPoints[0])
+        new_loc = QgsGeometry.fromPoint(geomPoints[-1])
         truckFeat = self.getSelectedTruck()
         trucklayer.startEditing()
         trucklayer.changeGeometry(truckFeat[0].id(), new_loc)
@@ -453,41 +453,50 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             return
         i = 1
         n = 100. / len(incidents)
+        templayer = uf.getLegendLayerByName(self.iface, "temp")
+        self.deleteTempFeat()
+        attributes = []
+        types = []
+        if not templayer:
+            templayer = uf.createTempLayer('temp','POINT',incidentlayer.crs().postgisSrid(),attributes,types)
+        Feats = [Truckgeom]
+        lstattributes = []
         for incident in incidents:
+            incidentgeom = incident.geometry()
+            Feats.append(incidentgeom)
+            #lstattributes.append([0,0])
+        uf.insertTempFeaturesGeom(templayer, Feats, lstattributes)
+        uf.loadTempLayer(templayer)
+        templayer = uf.getLegendLayerByName(self.iface, "temp")
+        selected_sources = templayer.getFeatures()
+        source_points = [feature.geometry().asPoint() for feature in selected_sources]
+        self.buildNetwork(source_points)
+        Feats = templayer.getFeatures()
+        for Feat in Feats:
             percentage = i*n
             i += 1
-            attributes = ['id']
-            incidentgeom = incident.geometry()
-            duo = [incidentgeom,Truckgeom]
-            #voeg selected brandweerauto en id aan lijst toe
-            types = [QtCore.QVariant.String]
-            templayer = uf.getLegendLayerByName(self.iface, "temp")
-            self.deleteTempFeat()
-            if not templayer:
-                templayer = uf.createTempLayer('temp','POINT',incidentlayer.crs().postgisSrid(),attributes,types)
-            uf.insertTempFeaturesGeom(templayer, duo, [[0,0],[0,0]])
-            uf.loadTempLayer(templayer)
             self.counterProgressBar.setValue(percentage)
-            self.calculateRoute()
-
+            self.calculateRoute(Feat.id())
         routes = uf.getLegendLayerByName(self.iface, "Routes")
         a =  QtCore.QVariant.Double
         uf.addFields(routes,['length','tot_imp','length_imp','road_imp','block_imp'],[a,a,a,a,a])
         provider = routes.dataProvider()
         features = provider.getFeatures()
-        routes.startEditing()
         dist = []
         incidentimportance = uf.getAllFeatureValues(incidentlayer,"importance")
         incidentcompleteblock = uf.getAllFeatureValues(incidentlayer,"full block")
         incidentbuilding = uf.getAllFeatureValues(incidentlayer,"Building")
+        routes.startEditing()
         for feature in features:
             geom = feature.geometry()
+            if geom.length() == 0:
+                routes.deleteFeature(feature.id())
+                continue
             routes.changeAttributeValue(feature.id(), 1, geom.length())
             dist.append([geom.length(),feature.id()])
         dist.sort(reverse=True)
         maxdist = dist[0][0]
         routedecision = []
-
         for lnth,fid in dist:
             lenimp,incimp,incblock,incbuild = (500-(lnth/maxdist)*500),incidentimportance[fid-1],incidentcompleteblock[fid-1]*50,incidentbuilding[fid-1]
             totimp = lenimp+incimp+incblock+incbuild*100
@@ -503,35 +512,34 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         request.setFilterFids([riderouteId])
         features = routes.getFeatures(request)
         goal_layer = uf.getLegendLayerByName(self.iface, "goal")
-        b,c,d,e,g = [routedecision[-1][0],routedecision[-1][-1],routedecision[-1][3],routedecision[-1][4],routedecision[-1][5]]
+        b,c,d,e,g = [routedecision[-1][0],(routedecision[-1][-1],int(routedecision[-1][2])),routedecision[-1][3],routedecision[-1][4],routedecision[-1][5]]
         if e == 50:
-            f = 'Fully blocked'
+            f = ';Fully blocked (50/50 pt)'
         else:
-            f = 'Half blocked'
+            f = ';Half blocked (0/50 pt)'
         if g == 1:
-            extratext = ';Roadblock is near important building'
+            extratext = ';Roadblock is near important building (100/100 pt)'
         else:
             extratext = ''
+        ctext = ';Length {0} meters ({1}/500 pt)'.format(int(c[0]),c[1])
         if d == 50:
-            road = ';Small road'
+            road = ';Small road (50/250 pt)'
         elif d == 150:
-            road = ';Medium road'
+            road = ';Medium road (150/250 pt)'
         else:
-            road = ';Big road'
+            road = ';Big road (250/250 pt)'
         self.RoadblockInfoList.clear()
-        self.RoadblockInfoList.addItems('Total importance: {0};Length: {1} meters{2};{3}{4}'.format(int(b),int(c),road,f,extratext).split(';'))
+        self.RoadblockInfoList.addItems('Total importance: {0} pt;{1}{2}{3}{4}'.format(int(b),ctext,road,f,extratext).split(';'))
         if goal_layer:
             self.deleteLayer(["goal"])
         else:
             attribs = ['tot_imp','length_imp','inc_imp','block_imp']
             goal_layer = uf.createTempLayer('goal','LINESTRING',routes.crs().postgisSrid(), attribs,[a,a,a,a])
             uf.loadTempLayer(goal_layer)
-
         symbols = goal_layer.rendererV2().symbols()
         sym = symbols[0]
         sym.setWidth(1)
         sym.setColor(QtGui.QColor.fromRgb(0,102,102))
-
         for feature in features:
             fgeom = feature.geometry()
         self.stackedWidget.setCurrentIndex(1)
@@ -563,19 +571,16 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         roadblock_layer.commitChanges()
 
 
-    def calculateRoute(self):
-        # origin and destination must be in the set of tied_points
+    def calculateRoute(self,destid):
         layer = uf.getLegendLayerByName(self.iface, "temp")
-        selected_sources = layer.getFeatures()
-        source_points = [feature.geometry().asPoint() for feature in selected_sources]
-        self.buildNetwork(source_points)
+        # origin and destination must be in the set of tied_points
         options = len(self.tied_points)
         if options > 1:
             # origin and destination are given as an index in the tied_points list
             origin = 0
-            destination = random.randint(1,options-1)
+            #destination = random.randint(1,options-1)
             # calculate the shortest path for the given origin and destination
-            path = uf.calculateRouteDijkstra(self.graph, self.tied_points, origin, destination)
+            path = uf.calculateRouteDijkstra(self.graph, self.tied_points, origin, destid)
             # store the route results in temporary layer called "Routes"
             routes_layer = uf.getLegendLayerByName(self.iface, "Routes")
             # create one if it doesn't exist
