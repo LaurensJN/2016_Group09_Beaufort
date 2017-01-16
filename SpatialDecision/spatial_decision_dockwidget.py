@@ -26,6 +26,7 @@ from qgis.core import *
 from qgis.networkanalysis import *
 from qgis.gui import *
 import processing
+from datetime import datetime
 
 # matplotlib for the charts
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
@@ -80,6 +81,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.selectAttributeCombo.activated.connect(self.setSelectedAttribute)
         self.SelectTruckCombo.activated.connect(self.setSelectedTruck)
         self.SolvedIncidentButton.clicked.connect(self.incident_solved)
+        self.SolvedIncidentButton.clicked.connect(self.endtime)
         self.StartDrivingButton.clicked.connect(self.StartDriving)
         self.NeedHelpButton.clicked.connect(self.needmorehelp)
         self.GetNewIncidentButton.clicked.connect(self.calculateAllRoutes)
@@ -156,6 +158,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.updateSelectedTruck()
         self.stackedWidget.setCurrentIndex(0)
         self.network_layer = self.getNetwork()
+        self.startTime()
         roadblocks = uf.getLegendLayerByName(self.iface, "roadblocks")
         if roadblocks:
             roadblockFeat = roadblocks.getFeatures()
@@ -219,6 +222,37 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         layer_name = self.selectLayerCombo.currentText()
         layer = uf.getLegendLayerByName(self.iface,layer_name)
         return layer
+
+    def startTime(self):
+        now = datetime.now()
+        goal_layer=uf.getLegendLayerByName(self.iface,"roadblocks")
+        goal_layer.startEditing()
+        if goal_layer:
+            ids = uf.getAllFeatureIds(goal_layer)
+            for id in ids:
+                goal_layer.changeAttributeValue(id,6,str(now))
+
+        #features = goal_layer.getFeatures()
+        #feat = QgsFeature()
+        #while features.nextFeature(feat):
+        #    goal_layer.changeAttributeValue(feat.id,6,now)
+        goal_layer.commitChanges()
+
+    def endtime(self):
+        now = datetime.now()
+        roadblock_layer = uf.getLegendLayerByName(self.iface, "roadblocks")
+        truckFeat = self.getSelectedTruck()
+        locblockgeom = truckFeat[0].geometry()
+        locblocktuple = locblockgeom.asPoint()
+        Exp = QgsExpression(
+            "distance(geomFromWKT('Point ({0} {1})'),  $geometry ) <= 100".format(locblocktuple[0], locblocktuple[1]))
+        Feats = roadblock_layer.getFeatures(QgsFeatureRequest(Exp))
+        roadblock_layer.startEditing()
+        for Feat in Feats:
+            roadblock_layer.changeAttributeValue(Feat.id(), 7, str(now))
+            roadblock_layer.changeAttributeValue(Feat.id(),8,self.SelectTruckCombo.currentText())
+        roadblock_layer.commitChanges()
+
 
     def StartDriving(self):
         goal_layer = uf.getLegendLayerByName(self.iface,"goal")
