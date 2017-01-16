@@ -259,10 +259,14 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     def getreport(self):
         self.stackedWidget.setCurrentIndex(4)
+
+
         getreport_layer = uf.getLegendLayerByName(self.iface, "roadblocks")
         start = uf.getAllFeatureValues(getreport_layer, "start time" )
         end = uf.getAllFeatureValues(getreport_layer,"end time" )
         user = uf.getAllFeatureValues(getreport_layer, "solved by")
+        self.reportList.setRowCount(len(start))
+        self.reportList.setColumnCount(3)
         self.reportList.setHorizontalHeaderLabels(['Start Time','End Time','Solved By'])
         for row in range(len(start)):
             item1 = QtGui.QTableWidgetItem(str(start[row]))
@@ -291,8 +295,7 @@ for n in range (len(start)):
     txt = ' starttime {0} endtime {1} {2}'.format(start[n], end2[n], user2[n])
     txtlist.append(txt)"""
 
-        self.reportList.setRowCount(len(start))
-        self.reportList.setColumnCount(3)
+
 
 
 
