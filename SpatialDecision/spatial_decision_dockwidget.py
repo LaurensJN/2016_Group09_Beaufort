@@ -122,7 +122,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.emitPoint.canvasClicked.connect(self.getPoint)
 
         # set current UI values
-        self.counterProgressBar.setValue(0)
+        self.setProgress(0)
 
         # add button icons
         #self.medicButton.setIcon(QtGui.QIcon(':icons/medic_box.png'))
@@ -297,7 +297,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.canvas.setExtent(layer.extent())
         self.canvas.zoomScale((self.canvas.scale() * 1.2))
         self.canvas.refresh()
-        self.counterProgressBar.setValue(0)
+        self.setProgress(0)
         self.stackedWidget.setCurrentIndex(0)
 
 
@@ -342,7 +342,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.timerThread.timerError.connect(self.cancelCounter)
         self.timerThread.start()
         # from here the timer is running in the background on a separate thread. user can continue working on QGIS.
-        self.counterProgressBar.setValue(0)
+        self.setProgress(0)
         self.startCounterButton.setDisabled(True)
         self.cancelCounterButton.setDisabled(True)
 
@@ -468,7 +468,6 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         return values
 
     def calculateAllRoutes(self):
-        self.stackedWidget.setCurrentIndex(0)
         self.counterProgressBar.setValue(5)
         Truck = self.getSelectedTruck()
         incidentlayer = uf.getLegendLayerByName(self.iface,"roadblocks")
@@ -484,8 +483,6 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.iface.messageBar().pushMessage("All incidents are solved!", level=10, duration=10)
             self.stackedWidget.setCurrentIndex(3)
             return
-        i = 1
-        n = 100. / len(incidents)
         templayer = uf.getLegendLayerByName(self.iface, "temp")
         self.deleteTempFeat()
         attributes = []
@@ -505,10 +502,12 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         source_points = [feature.geometry().asPoint() for feature in selected_sources]
         self.buildNetwork(source_points)
         Feats = templayer.getFeatures()
+        i = 1
+        n = 100. / len(incidents)
         for Feat in Feats:
             percentage = i*n
             i += 1
-            self.counterProgressBar.setValue(percentage)
+            self.setProgress(percentage)
             self.calculateRoute(Feat.id())
         routes = uf.getLegendLayerByName(self.iface, "Routes")
         a =  QtCore.QVariant.Double
@@ -586,6 +585,10 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.deleteLayer(["temp","Routes"])
         obstacles_layer = uf.getLegendLayerByName(self.iface, "roadblocks")
         obstacles_layer.removeSelection()
+
+    def setProgress(self,p):
+        self.counterProgressBar.setValue(p)
+        self.counterProgressBar2.setValue(p)
 
     def incident_solved(self):
         self.change_status("solved")
