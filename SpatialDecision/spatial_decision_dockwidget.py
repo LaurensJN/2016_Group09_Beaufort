@@ -592,6 +592,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     def incident_solved(self):
         self.change_status("solved")
+        self.setProgress(0)
         self.stackedWidget.setCurrentIndex(3)
 
     def change_status(self,status):
