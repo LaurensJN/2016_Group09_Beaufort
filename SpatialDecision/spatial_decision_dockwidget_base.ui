@@ -137,28 +137,7 @@
        <layout class="QHBoxLayout" name="horizontalLayout_3">
         <item>
          <layout class="QGridLayout" name="gridLayout">
-          <item row="1" column="0">
-           <widget class="QPushButton" name="ChangeTruckButton">
-            <property name="text">
-             <string>Change Firetruck</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QPushButton" name="QuitButton">
-            <property name="text">
-             <string>Quit</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QPushButton" name="GetNewIncidentButton">
-            <property name="text">
-             <string>Get new incident</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
+          <item row="4" column="0">
            <spacer name="verticalSpacer_4">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
@@ -170,6 +149,34 @@
              </size>
             </property>
            </spacer>
+          </item>
+          <item row="0" column="0">
+           <widget class="QPushButton" name="GetNewIncidentButton">
+            <property name="text">
+             <string>Get new incident</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QPushButton" name="QuitButton">
+            <property name="text">
+             <string>Quit</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QPushButton" name="ChangeTruckButton">
+            <property name="text">
+             <string>Change Firetruck</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0">
+           <widget class="QProgressBar" name="progressBar">
+            <property name="value">
+             <number>24</number>
+            </property>
+           </widget>
           </item>
          </layout>
         </item>
