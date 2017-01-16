@@ -87,6 +87,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.GetNewIncidentButton.clicked.connect(self.calculateAllRoutes)
         self.ChangeTruckButton.clicked.connect(self.changeTruck)
         self.QuitButton.clicked.connect(self.close)
+        self.BackButton.clicked.connect(self.goBack)
         #self.startCounterButton.clicked.connect(self.startCounter)
         #self.cancelCounterButton.clicked.connect(self.cancelCounter)
 
@@ -177,6 +178,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.closingPlugin.emit()
         event.accept()
 
+    def goBack(self):
+        self.stackedWidget.setCurrentIndex(3)
 #######
 #   Data functions
 #######

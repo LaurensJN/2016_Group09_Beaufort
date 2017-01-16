@@ -30,7 +30,7 @@
        </size>
       </property>
       <property name="currentIndex">
-       <number>4</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="page">
        <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -105,14 +105,14 @@
           <item>
            <widget class="QPushButton" name="SolvedIncidentButton">
             <property name="text">
-             <string>Solved current incident</string>
+             <string>Solved Current Incident</string>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QPushButton" name="NeedHelpButton">
             <property name="text">
-             <string>Need more help</string>
+             <string>Need More Help</string>
             </property>
            </widget>
           </item>
@@ -147,14 +147,14 @@
           <item row="4" column="0">
            <widget class="QPushButton" name="GetReportButton">
             <property name="text">
-             <string>Get report</string>
+             <string>Get Full Report</string>
             </property>
            </widget>
           </item>
           <item row="0" column="0">
            <widget class="QPushButton" name="GetNewIncidentButton">
             <property name="text">
-             <string>Get new incident</string>
+             <string>Get New Incident</string>
             </property>
            </widget>
           </item>
