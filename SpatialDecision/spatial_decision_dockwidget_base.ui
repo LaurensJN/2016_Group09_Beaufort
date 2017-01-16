@@ -145,7 +145,7 @@
            </widget>
           </item>
           <item row="6" column="0">
-           <widget class="QProgressBar" name="counterprogressBar2">
+           <widget class="QProgressBar" name="counterProgressBar2">
             <property name="value">
              <number>24</number>
             </property>
@@ -181,7 +181,7 @@
           <item row="3" column="0">
            <widget class="QPushButton" name="pushButton">
             <property name="text">
-             <string>Get </string>
+             <string>Get report</string>
             </property>
            </widget>
           </item>
