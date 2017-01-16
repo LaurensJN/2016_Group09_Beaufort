@@ -257,15 +257,27 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def getreport(self):
         self.stackedWidget.setCurrentIndex(4)
         getreport_layer = uf.getLegendLayerByName(self.iface, "roadblocks")
-        getAllFeatureValues(getreport_layer, [5, 6, 7])
-        values = []
-        if layer:
-            features = layer.getFeatures()
-            values = [feature.attribute(name) for feature in features]
-        return values
-        self.ReportList.clear()
-        self.ReportList.addItems('Report of events: {0} pt;{1}{2}{3]'.format(str(5), str(6), str(7)).split(';'))
-
+        start = uf.getAllFeatureValues(getreport_layer, "start time" )
+        end = uf.getAllFeatureValues(getreport_layer,"end time" )
+        end2 = []
+        for n in end:
+            if n == NULL:
+                end2.append('')
+            else:
+                end2.append(n)
+        user = uf.getAllFeatureValues(getreport_layer, "solved by" )
+        user2 = []
+        for n in user:
+            if n == NULL:
+                user2.append('unsolved')
+            else:
+                user2.append('solved by {0}'.format(n))
+        self.reportList.clear()
+        txtlist = []
+        for n in range (len(start)):
+            txt = ' starttime {0} endtime {1} {2}'.format(start[n], end2[n], user2[n])
+            txtlist.append(txt)
+        self.reportList.addItems(txtlist)
 
 
 
