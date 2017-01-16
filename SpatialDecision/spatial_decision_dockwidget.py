@@ -87,6 +87,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.GetNewIncidentButton.clicked.connect(self.calculateAllRoutes)
         self.ChangeTruckButton.clicked.connect(self.changeTruck)
         self.QuitButton.clicked.connect(self.close)
+        self.GetReportButton.clicked.connect(self.getreport)
         #self.startCounterButton.clicked.connect(self.startCounter)
         #self.cancelCounterButton.clicked.connect(self.cancelCounter)
 
@@ -252,6 +253,20 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             roadblock_layer.changeAttributeValue(Feat.id(), 7, str(now))
             roadblock_layer.changeAttributeValue(Feat.id(),8,self.SelectTruckCombo.currentText())
         roadblock_layer.commitChanges()
+
+    def getreport(self):
+        self.stackedWidget.setCurrentIndex(4)
+        getreport_layer = uf.getLegendLayerByName(self.iface, "roadblocks")
+        getAllFeatureValues(getreport_layer, [5, 6, 7])
+        values = []
+        if layer:
+            features = layer.getFeatures()
+            values = [feature.attribute(name) for feature in features]
+        return values
+        self.ReportList.clear()
+        self.ReportList.addItems('Report of events: {0} pt;{1}{2}{3]'.format(str(5), str(6), str(7)).split(';'))
+
+
 
 
     def StartDriving(self):
