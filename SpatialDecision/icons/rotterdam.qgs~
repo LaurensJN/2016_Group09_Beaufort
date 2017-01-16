@@ -6,7 +6,7 @@
     <layer-tree-layer expanded="1" checked="Qt::Checked" id="roadblocks_final20170109105439973" name="roadblocks">
       <customproperties/>
     </layer-tree-layer>
-    <layer-tree-layer expanded="1" checked="Qt::Checked" id="firetrucks20170103121225255" name="firetrucks">
+    <layer-tree-layer expanded="0" checked="Qt::Checked" id="firetrucks20170103121225255" name="firetrucks">
       <customproperties/>
     </layer-tree-layer>
     <layer-tree-layer expanded="0" checked="Qt::Unchecked" id="roads20161216111629134" name="roads">
@@ -20,10 +20,10 @@
   <mapcanvas>
     <units>meters</units>
     <extent>
-      <xmin>92440.88002893528027926</xmin>
-      <ymin>432610.74574158631730825</ymin>
-      <xmax>94797.59060439853055868</xmax>
-      <ymax>434780.32907713495660573</ymax>
+      <xmin>87928.65849290537880734</xmin>
+      <ymin>426787.50477904867148027</ymin>
+      <xmax>106782.34309661138104275</xmax>
+      <ymax>444144.17146343778586015</ymax>
     </extent>
     <rotation>0</rotation>
     <projections>1</projections>
@@ -57,7 +57,6 @@
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="temp20170103143829462"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Volumes20161209113829248"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Buffer20170103135008338"/>
-      <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="roadsimportant_20170115214733846"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Buffer20170103135011083"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="temp20170103143449159"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Routes20170103144424210"/>
@@ -85,7 +84,6 @@
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Routes20170109103216839"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Buffer20170103135003067"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="temp20170103144651426"/>
-      <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="importantbuildings20170115213330142"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Buffer20170103134951836"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="roadsimportant_20161216122629362"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="temp20170109102537647"/>
@@ -122,8 +120,8 @@
         <legendlayerfile isInOverview="0" layerid="roadblocks_final20170109105439973" visible="1"/>
       </filegroup>
     </legendlayer>
-    <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="firetrucks" showFeatureCount="0">
-      <filegroup open="true" hidden="false">
+    <legendlayer drawingOrder="-1" open="false" checked="Qt::Checked" name="firetrucks" showFeatureCount="0">
+      <filegroup open="false" hidden="false">
         <legendlayerfile isInOverview="0" layerid="firetrucks20170103121225255" visible="1"/>
       </filegroup>
     </legendlayer>
@@ -368,15 +366,15 @@
                 </effect>
                 <effect type="color">
                   <prop k="blend_mode" v="0"/>
-                  <prop k="brightness" v="98"/>
+                  <prop k="brightness" v="50"/>
                   <prop k="colorize" v="1"/>
                   <prop k="colorize_color" v="0,123,6,255"/>
                   <prop k="colorize_strength" v="100"/>
-                  <prop k="contrast" v="17"/>
+                  <prop k="contrast" v="0"/>
                   <prop k="draw_mode" v="2"/>
                   <prop k="enabled" v="1"/>
-                  <prop k="grayscale_mode" v="0"/>
-                  <prop k="saturation" v="1.71"/>
+                  <prop k="grayscale_mode" v="3"/>
+                  <prop k="saturation" v="1"/>
                   <prop k="transparency" v="0"/>
                 </effect>
                 <effect type="innerShadow">
@@ -620,8 +618,8 @@ def my_form_open(dialog, layer, feature):
     <maplayer minimumScale="-4.65661e-10" maximumScale="1e+08" simplifyDrawingHints="0" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" geometry="Point" simplifyMaxScale="1" type="vector" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
       <extent>
         <xmin>84892</xmin>
-        <ymin>429689</ymin>
-        <xmax>97638.25615410387399606</xmax>
+        <ymin>429317</ymin>
+        <xmax>97749</xmax>
         <ymax>443096.06099999998696148</ymax>
       </extent>
       <id>roadblocks_final20170109105439973</id>
@@ -666,6 +664,9 @@ def my_form_open(dialog, layer, feature):
         <edittype widgetv2type="TextEdit" name="Help">
           <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
         </edittype>
+        <edittype widgetv2type="TextEdit" name="extra">
+          <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
+        </edittype>
       </edittypes>
       <renderer-v2 forceraster="0" symbollevels="0" type="RuleRenderer" enableorderby="0">
         <rules key="{776fdded-3385-4346-8f0e-3d0688016f33}">
@@ -698,7 +699,7 @@ def my_form_open(dialog, layer, feature):
           <symbol alpha="1" clip_to_extent="1" type="marker" name="1">
             <layer pass="0" class="SimpleMarker" locked="0">
               <prop k="angle" v="0"/>
-              <prop k="color" v="255,34,0,255"/>
+              <prop k="color" v="255,0,0,255"/>
               <prop k="horizontal_anchor_point" v="1"/>
               <prop k="name" v="triangle"/>
               <prop k="offset" v="0,0"/>
@@ -714,12 +715,81 @@ def my_form_open(dialog, layer, feature):
               <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
               <prop k="size_unit" v="MM"/>
               <prop k="vertical_anchor_point" v="1"/>
+              <effect enabled="0" type="effectStack">
+                <effect type="dropShadow">
+                  <prop k="blend_mode" v="13"/>
+                  <prop k="blur_level" v="10"/>
+                  <prop k="color" v="0,0,0,255"/>
+                  <prop k="draw_mode" v="2"/>
+                  <prop k="enabled" v="0"/>
+                  <prop k="offset_angle" v="135"/>
+                  <prop k="offset_distance" v="2"/>
+                  <prop k="offset_unit" v="MM"/>
+                  <prop k="offset_unit_scale" v="0,0,0,0,0,0"/>
+                  <prop k="transparency" v="0"/>
+                </effect>
+                <effect type="outerGlow">
+                  <prop k="blend_mode" v="0"/>
+                  <prop k="blur_level" v="3"/>
+                  <prop k="color1" v="0,0,255,255"/>
+                  <prop k="color2" v="0,255,0,255"/>
+                  <prop k="color_type" v="0"/>
+                  <prop k="discrete" v="0"/>
+                  <prop k="draw_mode" v="2"/>
+                  <prop k="enabled" v="0"/>
+                  <prop k="single_color" v="255,255,255,255"/>
+                  <prop k="spread" v="2"/>
+                  <prop k="spread_unit" v="MM"/>
+                  <prop k="spread_unit_scale" v="0,0,0,0,0,0"/>
+                  <prop k="transparency" v="0.5"/>
+                </effect>
+                <effect type="color">
+                  <prop k="blend_mode" v="0"/>
+                  <prop k="brightness" v="50"/>
+                  <prop k="colorize" v="1"/>
+                  <prop k="colorize_color" v="0,123,6,255"/>
+                  <prop k="colorize_strength" v="100"/>
+                  <prop k="contrast" v="0"/>
+                  <prop k="draw_mode" v="2"/>
+                  <prop k="enabled" v="1"/>
+                  <prop k="grayscale_mode" v="3"/>
+                  <prop k="saturation" v="1"/>
+                  <prop k="transparency" v="0"/>
+                </effect>
+                <effect type="innerShadow">
+                  <prop k="blend_mode" v="13"/>
+                  <prop k="blur_level" v="10"/>
+                  <prop k="color" v="0,0,0,255"/>
+                  <prop k="draw_mode" v="2"/>
+                  <prop k="enabled" v="0"/>
+                  <prop k="offset_angle" v="135"/>
+                  <prop k="offset_distance" v="2"/>
+                  <prop k="offset_unit" v="MM"/>
+                  <prop k="offset_unit_scale" v="0,0,0,0,0,0"/>
+                  <prop k="transparency" v="0"/>
+                </effect>
+                <effect type="innerGlow">
+                  <prop k="blend_mode" v="0"/>
+                  <prop k="blur_level" v="3"/>
+                  <prop k="color1" v="0,0,255,255"/>
+                  <prop k="color2" v="0,255,0,255"/>
+                  <prop k="color_type" v="0"/>
+                  <prop k="discrete" v="0"/>
+                  <prop k="draw_mode" v="2"/>
+                  <prop k="enabled" v="0"/>
+                  <prop k="single_color" v="255,255,255,255"/>
+                  <prop k="spread" v="2"/>
+                  <prop k="spread_unit" v="MM"/>
+                  <prop k="spread_unit_scale" v="0,0,0,0,0,0"/>
+                  <prop k="transparency" v="0.5"/>
+                </effect>
+              </effect>
             </layer>
           </symbol>
           <symbol alpha="1" clip_to_extent="1" type="marker" name="2">
             <layer pass="0" class="SimpleMarker" locked="0">
               <prop k="angle" v="0"/>
-              <prop k="color" v="98,255,111,255"/>
+              <prop k="color" v="0,123,6,255"/>
               <prop k="horizontal_anchor_point" v="1"/>
               <prop k="name" v="triangle"/>
               <prop k="offset" v="0,0"/>
@@ -735,6 +805,75 @@ def my_form_open(dialog, layer, feature):
               <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
               <prop k="size_unit" v="MM"/>
               <prop k="vertical_anchor_point" v="1"/>
+              <effect enabled="1" type="effectStack">
+                <effect type="dropShadow">
+                  <prop k="blend_mode" v="13"/>
+                  <prop k="blur_level" v="10"/>
+                  <prop k="color" v="0,0,0,255"/>
+                  <prop k="draw_mode" v="2"/>
+                  <prop k="enabled" v="0"/>
+                  <prop k="offset_angle" v="135"/>
+                  <prop k="offset_distance" v="2"/>
+                  <prop k="offset_unit" v="MM"/>
+                  <prop k="offset_unit_scale" v="0,0,0,0,0,0"/>
+                  <prop k="transparency" v="0"/>
+                </effect>
+                <effect type="outerGlow">
+                  <prop k="blend_mode" v="0"/>
+                  <prop k="blur_level" v="3"/>
+                  <prop k="color1" v="0,0,255,255"/>
+                  <prop k="color2" v="0,255,0,255"/>
+                  <prop k="color_type" v="0"/>
+                  <prop k="discrete" v="0"/>
+                  <prop k="draw_mode" v="2"/>
+                  <prop k="enabled" v="0"/>
+                  <prop k="single_color" v="255,255,255,255"/>
+                  <prop k="spread" v="2"/>
+                  <prop k="spread_unit" v="MM"/>
+                  <prop k="spread_unit_scale" v="0,0,0,0,0,0"/>
+                  <prop k="transparency" v="0.5"/>
+                </effect>
+                <effect type="color">
+                  <prop k="blend_mode" v="0"/>
+                  <prop k="brightness" v="50"/>
+                  <prop k="colorize" v="1"/>
+                  <prop k="colorize_color" v="0,123,6,255"/>
+                  <prop k="colorize_strength" v="100"/>
+                  <prop k="contrast" v="0"/>
+                  <prop k="draw_mode" v="2"/>
+                  <prop k="enabled" v="1"/>
+                  <prop k="grayscale_mode" v="3"/>
+                  <prop k="saturation" v="1"/>
+                  <prop k="transparency" v="0"/>
+                </effect>
+                <effect type="innerShadow">
+                  <prop k="blend_mode" v="13"/>
+                  <prop k="blur_level" v="10"/>
+                  <prop k="color" v="0,0,0,255"/>
+                  <prop k="draw_mode" v="2"/>
+                  <prop k="enabled" v="0"/>
+                  <prop k="offset_angle" v="135"/>
+                  <prop k="offset_distance" v="2"/>
+                  <prop k="offset_unit" v="MM"/>
+                  <prop k="offset_unit_scale" v="0,0,0,0,0,0"/>
+                  <prop k="transparency" v="0"/>
+                </effect>
+                <effect type="innerGlow">
+                  <prop k="blend_mode" v="0"/>
+                  <prop k="blur_level" v="3"/>
+                  <prop k="color1" v="0,0,255,255"/>
+                  <prop k="color2" v="0,255,0,255"/>
+                  <prop k="color_type" v="0"/>
+                  <prop k="discrete" v="0"/>
+                  <prop k="draw_mode" v="2"/>
+                  <prop k="enabled" v="0"/>
+                  <prop k="single_color" v="255,255,255,255"/>
+                  <prop k="spread" v="2"/>
+                  <prop k="spread_unit" v="MM"/>
+                  <prop k="spread_unit_scale" v="0,0,0,0,0,0"/>
+                  <prop k="transparency" v="0.5"/>
+                </effect>
+              </effect>
             </layer>
           </symbol>
         </symbols>
